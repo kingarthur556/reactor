@@ -996,7 +996,7 @@ async function connect(){
   }catch(e){}
   if(!db){db=makeLocalDB();uid='me';owner=true}
   mk={db,uid,live,ro,ready:false,owner};
-  $('live').textContent=live?(ro?'LIVE · READ-ONLY':'LIVE · SHARED MARKET'):'OFFLINE · THIS DEVICE ONLY'+(window.__connErr?' · '+window.__connErr.slice(0,70):(window.supabase?'':' · LIBRARY NOT LOADED'));
+  $('live').textContent='[v3] '+(live?(ro?'LIVE · READ-ONLY':'LIVE · SHARED MARKET'):'OFFLINE · THIS DEVICE ONLY'+(window.__connErr?' · '+window.__connErr.slice(0,70):(window.supabase?'':' · LIBRARY NOT LOADED')));
   try{const p=await db.doc('players/'+uid).get();if(p.exists){const d=p.data();if(d&&d.name)profile={name:String(d.name),icon:Number(d.icon)||0}}}catch(e){}
   try{
     const w=await db.doc('data/users/'+uid+'/wallet').get();
