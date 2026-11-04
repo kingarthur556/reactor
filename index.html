@@ -144,12 +144,23 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
 .tap{color:#a8f21f;opacity:.75;letter-spacing:.35em;font-size:12px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:.15}}
 @media(max-width:700px){.layout{grid-template-columns:1fr;gap:12px}.dial{width:min(100%,250px)}}
+.ovp{max-height:92vh;overflow:auto}
+.ovp .tt{font-size:14px;color:var(--txt);line-height:1.75;letter-spacing:.03em}
+.ovp .tt b{color:var(--lime)}
+.tdots{display:flex;gap:7px;justify-content:center}
+.tdots i{width:7px;height:7px;border-radius:50%;background:var(--dim)}
+.tdots i.on{background:var(--lime)}
+.tbtns{display:flex;gap:8px}
+.tbtns .ok,.tbtns .go{flex:1 1 0;width:auto!important;min-width:0;height:46px;padding:0;border:1px solid var(--lime);border-radius:10px;font:inherit;font-size:15px;font-weight:900;letter-spacing:.15em;cursor:pointer}
+.tbtns .ok{background:var(--field);color:var(--lime)}
+.tbtns .go{background:var(--lime);color:var(--on)}
+.tbtns .ok:disabled,.tbtns .go:disabled{opacity:.3;cursor:not-allowed}
 </style></head>
 <body class="boot">
 <div id="splash"><div class="gl" id="gl" data-text="BE CAREFUL">BE CAREFUL</div><div class="tap" id="tap" style="display:none">CLICK TO START</div></div>
 <main class="app" id="app">
 <header><div class="logo">REACTOR</div><div class="sup" id="sup"></div>
-<div class="right"><button class="snd" id="snd" aria-label="Sound"></button><div class="pts">POINTS<strong id="pts">1,000</strong></div></div></header>
+<div class="right"><button class="snd" id="help" aria-label="How to play" style="font:inherit;font-size:18px;font-weight:900">?</button><button class="snd" id="snd" aria-label="Sound"></button><div class="pts">POINTS<strong id="pts">1,000</strong></div></div></header>
 <div class="views">
 <div class="view on" id="vRadar"><div class="layout">
   <section class="dial">
@@ -193,6 +204,7 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
   <div class="mh">ICON</div><div class="icons" id="pfIcons"></div>
   <div class="mh">COLLECTION · VALUE <b id="pfVal">0</b></div><div id="pfColl"></div>
   <div id="codesWrap" style="display:none"><div class="mh">TODAY'S CODES (SHOWN TO THE OWNER ONLY)</div><div class="codes" id="codesBox"></div></div>
+  <div class="mh">LANGUAGE</div><div class="seg" id="langSeg"><button data-l="ru">РУССКИЙ</button><button data-l="en">ENGLISH</button></div>
   <div class="mh">ACCOUNT</div><div class="codes" id="acct"></div>
 </div></div></div>
 </div>
@@ -204,6 +216,79 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
 </nav>
 <div class="pop" id="pop"></div>
 </main>
+<script>
+/* ================= LANGUAGE (ru / en) =================
+   English is the source text. In Russian mode every string shown on the page is translated on the fly
+   (proper names such as REACTOR and item names are left as they are). */
+let LANG='';try{LANG=localStorage.getItem('reactor_lang')||''}catch(e){}
+const RU_EXACT={
+"CLICK TO START":"НАЖМИТЕ, ЧТОБЫ НАЧАТЬ","POINTS":"ОЧКИ","POT":"БАНК","NORMAL":"НОРМА","OVERHEAT":"ПЕРЕГРЕВ","ACCIDENT":"АВАРИЯ",
+"EVERYTHING LOST":"ВСЁ ПОТЕРЯНО","START":"СТАРТ","CASH OUT":"ВЫВЕСТИ","FREEZE":"ЗАМОРОЗКА","FREEZE —":"ЗАМОРОЗКА —","RESET":"СБРОС",
+"OVERHEATS CLEARED":"ПЕРЕГРЕВЫ СНЯТЫ","SUPER":"СУПЕР","SUPER GAME":"СУПЕР-ИГРА","FROZEN: 3 OVERHEATS AVAILABLE AGAIN":"ЗАМОРОЖЕНО: СНОВА ДОСТУПНЫ 3 ПЕРЕГРЕВА",
+"SUPER OVER":"СУПЕР-ИГРА ЗАКОНЧЕНА","INVALID CODE":"НЕВЕРНЫЙ КОД","WAIT FOR THE ROUND":"ДОЖДИТЕСЬ КОНЦА РАУНДА","THIS CODE IS ALREADY USED":"ЭТОТ КОД УЖЕ ИСПОЛЬЗОВАН",
+"STAKE":"СТАВКА","CODE":"КОД","PRICE":"ЦЕНА","NICKNAME":"НИКНЕЙМ","MARKET":"РЫНОК","RANKS":"РЕЙТИНГ","PROFILE":"ПРОФИЛЬ",
+"SHOP":"МАГАЗИН","OFFERS":"ПРЕДЛОЖЕНИЯ","REQUESTS":"ЗАПРОСЫ","MY":"МОЁ","CONNECTING…":"ПОДКЛЮЧЕНИЕ…",
+"LIVE · SHARED MARKET":"ОНЛАЙН · ОБЩИЙ РЫНОК","LIVE · READ-ONLY":"ОНЛАЙН · ТОЛЬКО ЧТЕНИЕ",
+"SOLD OUT":"РАСПРОДАНО","BUY":"КУПИТЬ","SELL":"ПРОДАТЬ","CANCEL":"ОТМЕНА","LIST":"ВЫСТАВИТЬ","REQUEST":"ЗАПРОСИТЬ","YOU":"ВЫ",
+"SORT":"СОРТИРОВКА","ITEM":"ПРЕДМЕТ","BY":"ОТ","PRICE ▲":"ЦЕНА ▲","PRICE ▼":"ЦЕНА ▼","VALUE ▼":"ЦЕННОСТЬ ▼","VALUE ▲":"ЦЕННОСТЬ ▲",
+"NO PLAYER LISTINGS YET":"ПОКА НЕТ ПРЕДЛОЖЕНИЙ ИГРОКОВ","NO BUY REQUESTS YET":"ПОКА НЕТ ЗАПРОСОВ НА ПОКУПКУ","NO PLAYERS YET":"ПОКА НЕТ ИГРОКОВ","NOTHING COLLECTED YET":"ПОКА НИЧЕГО НЕ СОБРАНО",
+"YOUR ITEMS · SELL ONLY ON THE MARKET, FOR ANY PRICE":"ВАШИ ПРЕДМЕТЫ · ПРОДАЖА ТОЛЬКО НА РЫНКЕ, ЗА ЛЮБУЮ ЦЕНУ",
+"BUY REQUEST · YOUR POINTS ARE HELD UNTIL SOMEONE SELLS TO YOU":"ЗАПРОС НА ПОКУПКУ · ВАШИ ОЧКИ ЗАМОРОЖЕНЫ, ПОКА КТО-ТО НЕ ПРОДАСТ ВАМ",
+"MARKET BUSY, TRY AGAIN":"РЫНОК ЗАНЯТ, ПОПРОБУЙТЕ ЕЩЁ РАЗ","NOT ENOUGH POINTS":"НЕДОСТАТОЧНО ОЧКОВ","ALREADY SOLD":"УЖЕ ПРОДАНО","LISTING CANCELLED":"ПРЕДЛОЖЕНИЕ СНЯТО",
+"ENTER A PRICE (WHOLE NUMBER)":"ВВЕДИТЕ ЦЕНУ (ЦЕЛОЕ ЧИСЛО)","YOU DO NOT OWN THIS":"У ВАС НЕТ ЭТОГО ПРЕДМЕТА","REQUEST PLACED":"ЗАПРОС СОЗДАН","REQUEST IS GONE":"ЗАПРОС УЖЕ НЕДОСТУПЕН",
+"REQUEST CANCELLED, POINTS RETURNED":"ЗАПРОС ОТМЕНЁН, ОЧКИ ВОЗВРАЩЕНЫ","READ-ONLY: ASK THE OWNER FOR CONTRIBUTOR ACCESS":"ТОЛЬКО ЧТЕНИЕ: ПОПРОСИТЕ У ВЛАДЕЛЬЦА ДОСТУП НА ЗАПИСЬ",
+"MARKET ERROR, TRY AGAIN":"ОШИБКА РЫНКА, ПОПРОБУЙТЕ ЕЩЁ РАЗ",
+"SAVE":"СОХРАНИТЬ","ICON":"ИКОНКА","COLLECTION":"КОЛЛЕКЦИЯ","COLLECTION · VALUE":"КОЛЛЕКЦИЯ · ЦЕННОСТЬ","COLLECTION VALUE":"ЦЕННОСТЬ КОЛЛЕКЦИИ","CLOSE":"ЗАКРЫТЬ",
+"ACCOUNT":"АККАУНТ","LANGUAGE":"ЯЗЫК","TODAY'S CODES (SHOWN TO THE OWNER ONLY)":"КОДЫ ДНЯ (ВИДНЫ ТОЛЬКО ВЛАДЕЛЬЦУ)","PROFILE SAVED ON THIS DEVICE ONLY":"ПРОФИЛЬ СОХРАНЁН ТОЛЬКО НА ЭТОМ УСТРОЙСТВЕ",
+"PLAYER ID":"ID ИГРОКА","BACK":"НАЗАД","NEXT":"ДАЛЕЕ","START PLAYING":"НАЧАТЬ ИГРУ",
+"NICKNAME: 3-16 LETTERS, DIGITS, SPACE, _ OR -":"НИКНЕЙМ: 3-16 БУКВ, ЦИФР, ПРОБЕЛ, _ ИЛИ -"
+};
+const RU_PAT=[
+ [/^NEXT OVERHEAT −(\d+)% OF (STAKE|POT)$/,m=>'СЛЕДУЮЩИЙ ПЕРЕГРЕВ −'+m[1]+'% ОТ '+(m[2]==='POT'?'БАНКА':'СТАВКИ')],
+ [/^−(\d+)% OF (STAKE|POT)$/,m=>'−'+m[1]+'% ОТ '+(m[2]==='POT'?'БАНКА':'СТАВКИ')],
+ [/^CASH OUT (.+)$/,m=>'ВЫВЕСТИ '+m[1]],
+ [/^FREEZE (.+)$/,m=>'ЗАМОРОЗКА '+m[1]],
+ [/^SUPER GAME · (\d+)s$/,m=>'СУПЕР-ИГРА · '+m[1]+' с'],
+ [/^SUPER (\d+)s$/,m=>'СУПЕР '+m[1]+' с'],
+ [/^SUPER POT PAID \+(.+)$/,m=>'БАНК СУПЕР-ИГРЫ ВЫПЛАЧЕН +'+m[1]],
+ [/^EDITION (.+)$/,m=>'ТИРАЖ '+m[1]],
+ [/^LEFT (.+) · YOU OWN (.+)$/,m=>'ОСТАЛОСЬ '+m[1]+' · У ВАС '+m[2]],
+ [/^SYSTEM · (.+) LEFT$/,m=>'СИСТЕМА · ОСТАЛОСЬ '+m[1]],
+ [/^BUY (.+)$/,m=>'КУПИТЬ '+m[1]],
+ [/^BOUGHT (.+)$/,m=>'КУПЛЕНО: '+m[1]],
+ [/^LISTED FOR (.+)$/,m=>'ВЫСТАВЛЕНО ЗА '+m[1]],
+ [/^SOLD FOR (.+)$/,m=>'ПРОДАНО ЗА '+m[1]],
+ [/^SOLD (.+) \+(.+)$/,m=>'ПРОДАНО: '+m[1]+' +'+m[2]],
+ [/^REQUEST FILLED: (.+)$/,m=>'ЗАПРОС ВЫПОЛНЕН: '+m[1]],
+ [/^TOP (\d+) OF (\d+)$/,m=>'ТОП '+m[1]+' ИЗ '+m[2]],
+ [/^OFFLINE · THIS DEVICE ONLY.*$/,m=>'ОФЛАЙН · ТОЛЬКО НА ЭТОМ УСТРОЙСТВЕ'],
+ [/^TODAY (\S+)$/,m=>'СЕГОДНЯ '+m[1]],
+ [/^TOMORROW (\S+): (.+)$/,m=>'ЗАВТРА '+m[1]+': '+m[2]],
+ [/^· (\d+)s$/,m=>'· '+m[1]+' с']
+];
+function tr(s){
+  if(LANG!=='ru')return s;
+  const str=String(s),k=str.trim();if(!k)return s;
+  if(Object.prototype.hasOwnProperty.call(RU_EXACT,k))return str.replace(k,()=>RU_EXACT[k]);
+  for(const [re,f] of RU_PAT){const m=k.match(re);if(m)return str.replace(k,()=>f(m))}
+  return s;
+}
+function trNode(n){
+  if(LANG!=='ru'||!n)return;
+  if(n.nodeType===3){const v=n.nodeValue,r=tr(v);if(r!==v)n.nodeValue=r}
+  else if(n.nodeType===1){
+    if(n.tagName==='SCRIPT'||n.tagName==='STYLE')return;
+    ['placeholder','aria-label'].forEach(a=>{if(n.hasAttribute(a)){const v=n.getAttribute(a),r=tr(v);if(r!==v)n.setAttribute(a,r)}});
+    n.childNodes.forEach(trNode);
+  }
+}
+if(LANG==='ru'){document.documentElement.lang='ru';trNode(document.body)}
+new MutationObserver(ms=>{if(LANG!=='ru')return;ms.forEach(m=>{
+  if(m.type==='characterData')trNode(m.target);
+  else if(m.type==='childList')m.addedNodes.forEach(trNode);
+  else if(m.type==='attributes')trNode(m.target)})
+}).observe(document.documentElement,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['placeholder','aria-label']});
+</script>
 <script>
 /* ================= AUDIO (all sounds synthesized, no files) ================= */
 const audio=(()=>{
@@ -951,7 +1036,8 @@ function renderProfile(){
 }
 $('pfIcons').addEventListener('click',e=>{const b=e.target.closest('.ic');if(!b||!profile)return;profile.icon=Number(b.dataset.i);renderProfile();scheduleSave()});
 const validName=n=>/^[\p{L}\p{N}_\- ]{3,16}$/u.test(n);
-$('pfSave').onclick=()=>{const n=$('pfName').value.trim();if(!validName(n))return alert('NICKNAME: 3-16 LETTERS, DIGITS, SPACE, _ OR -');profile.name=n;renderProfile();scheduleSave()};
+document.querySelectorAll('#langSeg button').forEach(b=>{b.classList.toggle('on',b.dataset.l===(LANG||'en'));b.onclick=()=>{try{localStorage.setItem('reactor_lang',b.dataset.l)}catch(e){}location.reload()}});
+$('pfSave').onclick=()=>{const n=$('pfName').value.trim();if(!validName(n))return alert(tr('NICKNAME: 3-16 LETTERS, DIGITS, SPACE, _ OR -'));profile.name=n;renderProfile();scheduleSave()};
 
 /* ----- login gate and profile creation ----- */
 function overlay(html){const o=document.createElement('div');o.className='ovl';o.innerHTML=`<div class="ovp">${html}</div>`;document.body.appendChild(o);return o}
@@ -1016,11 +1102,52 @@ async function connect(){
   mk.ready=true;
 }
 
+
+/* ----- tutorial ----- */
+const TUT=[
+ ['THE GOAL','You start with <b>1,000 points</b>. Type a stake and press <b>START</b>: your stake becomes the <b>POT</b>. Grow the pot, then press <b>CASH OUT</b> to bank it.'],
+ ['THE DIAL','Every spin lands in a <b>lime</b> zone (<b>NORMAL</b>) or an <b>amber</b> zone (<b>OVERHEAT</b>). The amber share is the overheat chance. It starts at <b>20%</b>, grows <b>+10%</b> after every normal result up to <b>60%</b>, and drops back to 20% after an overheat.'],
+ ['NORMAL','<b>NORMAL</b> adds <b>+20%</b> of the pot. Then you choose: press START for another spin, or CASH OUT and keep the pot.'],
+ ['OVERHEAT','<b>1st overheat:</b> −15% of your original stake.<br><b>2nd overheat:</b> −40% of the current pot.<br><b>3rd overheat = ACCIDENT:</b> the whole pot is lost.<br>After a loss, an accident or a cash-out the reactor resets to the start.'],
+ ['FREEZE','<b>FREEZE</b> cancels all overheats and sets the chance back to 20%, as if they never happened. You have <b>2 charges</b>, and each one comes back <b>60 minutes</b> after use. Freeze does not work in the super game.'],
+ ['CODES AND SUPER GAME','Enter a daily <b>CODE</b> to start the purple <b>SUPER GAME</b> for a few seconds. Overheat chance is always <b>10%</b>, every normal gives <b>+50%</b>, the 1st overheat takes <b>50%</b>, the 2nd is an accident. The pot is paid out when the time ends. Each code works once.'],
+ ['MARKET AND RANKS','Collect rare items in <b>MARKET</b>: buy from the system or from other players, sell for any price, or post a buy request. <b>RANKS</b> shows the most valuable collections. Press <b>?</b> at the top any time to see this guide again.']
+];
+const TUT_RU=[
+ ['ЦЕЛЬ','У вас на старте <b>1 000 очков</b>. Введите ставку и нажмите <b>СТАРТ</b>: ставка станет <b>БАНКОМ</b>. Увеличивайте банк и нажмите <b>ВЫВЕСТИ</b>, чтобы забрать его.'],
+ ['ШКАЛА','Каждый запуск попадает в <b>лаймовую</b> зону (<b>НОРМА</b>) или в <b>янтарную</b> зону (<b>ПЕРЕГРЕВ</b>). Размер янтарной зоны — это шанс перегрева. Он начинается с <b>20%</b>, растёт на <b>+10%</b> после каждой нормы до <b>60%</b> и снова падает до 20% после перегрева.'],
+ ['НОРМА','<b>НОРМА</b> добавляет <b>+20%</b> к банку. Дальше выбор: нажмите СТАРТ для нового запуска или ВЫВЕСТИ, чтобы забрать банк.'],
+ ['ПЕРЕГРЕВ','<b>1-й перегрев:</b> −15% от вашей начальной ставки.<br><b>2-й перегрев:</b> −40% от текущего банка.<br><b>3-й перегрев = АВАРИЯ:</b> весь банк потерян.<br>После проигрыша, аварии или вывода реактор возвращается в исходное состояние.'],
+ ['ЗАМОРОЗКА','<b>ЗАМОРОЗКА</b> отменяет все перегревы и возвращает шанс к 20%, как будто их не было. У вас <b>2 заряда</b>, каждый восстанавливается через <b>60 минут</b> после использования. В супер-игре заморозка не работает.'],
+ ['КОДЫ И СУПЕР-ИГРА','Введите ежедневный <b>КОД</b>, чтобы запустить фиолетовую <b>СУПЕР-ИГРУ</b> на несколько секунд. Шанс перегрева всегда <b>10%</b>, каждая норма даёт <b>+50%</b>, 1-й перегрев забирает <b>50%</b>, 2-й — авария. Банк выплачивается, когда время заканчивается. Каждый код работает один раз.'],
+ ['РЫНОК И РЕЙТИНГ','Собирайте редкие предметы на <b>РЫНКЕ</b>: покупайте у системы или у других игроков, продавайте за любую цену или создавайте запрос на покупку. <b>РЕЙТИНГ</b> показывает самые ценные коллекции. Нажмите <b>?</b> вверху, чтобы снова открыть это руководство.']
+];
+const TX=()=>LANG==='ru'?TUT_RU:TUT;
+function tutorial(){
+  let i=0;
+  const o=overlay('<h2 id="tTitle"></h2><div class="tt" id="tBody"></div><div class="tdots" id="tDots"></div><div class="tbtns"><button class="ok" id="tBack">BACK</button><button class="go" id="tNext">NEXT</button></div><button class="ok" id="tSkip" style="padding:9px">CLOSE</button>');
+  const done=()=>{try{localStorage.setItem('reactor_tut','1')}catch(e){}o.remove()};
+  const draw=()=>{
+    o.querySelector('#tTitle').textContent=(i+1)+'/'+TX().length+' · '+TX()[i][0];
+    o.querySelector('#tBody').innerHTML=TX()[i][1];
+    o.querySelector('#tDots').innerHTML=TX().map((_,k)=>'<i class="'+(k===i?'on':'')+'"></i>').join('');
+    o.querySelector('#tBack').disabled=i===0;
+    o.querySelector('#tNext').disabled=i===TX().length-1;
+    o.querySelector('#tSkip').textContent=i===TX().length-1?'START PLAYING':'CLOSE';
+  };
+  o.querySelector('#tBack').onclick=()=>{if(i>0){i--;draw()}};
+  o.querySelector('#tNext').onclick=()=>{if(i<TX().length-1){i++;draw()}else done()};
+  o.querySelector('#tSkip').onclick=done;
+  draw();
+}
+$('help').onclick=()=>{if(!document.querySelector('.ovl'))tutorial()};
+function maybeTutorial(){let seen=false;try{seen=localStorage.getItem('reactor_tut')==='1'}catch(e){}if(!seen)tutorial()}
+
 /* ----- splash: "BE CAREFUL" glitches in, riser, glitches out, riser is cut, game opens ----- */
 async function splash(){
   const gl=$('gl'),tap=$('tap');
   audio.init();
-  {
+  if(!window.__gest){
     tap.style.display='block';
     await new Promise(r=>{const go=()=>{document.removeEventListener('pointerdown',go);document.removeEventListener('keydown',go);r()};document.addEventListener('pointerdown',go);document.addEventListener('keydown',go)});
     audio.init();await sleep(120);
@@ -1036,14 +1163,22 @@ async function splash(){
   audio.riserCut();$('splash').remove();
 }
 function fitNow(){const app=$('app');app.style.zoom=1;const pad=14,z=Math.min(1,(innerWidth-pad*2)/app.offsetWidth,(innerHeight-pad*2)/app.offsetHeight);app.style.zoom=z}
+function pickLang(){return new Promise(res=>{
+  const o=overlay('<h2>LANGUAGE · ЯЗЫК</h2><button class="go" id="lRu">РУССКИЙ</button><button class="go" id="lEn">ENGLISH</button>');
+  o.style.zIndex=1100;
+  const set=l=>{LANG=l;try{localStorage.setItem('reactor_lang',l)}catch(e){}audio.init();document.documentElement.lang=l;if(l==='ru')trNode(document.body);o.remove();res()};
+  o.querySelector('#lRu').onclick=()=>set('ru');o.querySelector('#lEn').onclick=()=>set('en');
+})}
 async function boot(){
   const conn=connect();
+  if(!LANG)await pickLang();
   await splash();
   await conn;
   if(!profile)profile={name:'PLAYER-'+Math.random().toString(36).slice(2,6).toUpperCase(),icon:Math.floor(Math.random()*ICONS.length)};
   walletReady=true;
   document.body.classList.remove('boot');
   audio.musicGate(true);
+  maybeTutorial();
   drawRing();update();fitNow();renderTop();renderProfile();
   publishProfile();
 }
