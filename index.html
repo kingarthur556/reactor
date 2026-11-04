@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>REACTOR</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <meta property="og:title" content="REACTOR"><meta property="og:type" content="website">
-<meta property="og:image" content="https://YOUR-SITE-ADDRESS/reactor_preview.png"><meta property="og:url" content="https://YOUR-SITE-ADDRESS/">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://YOUR-SITE-ADDRESS/reactor_preview.png">
+<meta property="og:image" content="https://kingarthur556.github.io/reactor/reactor_preview.png"><meta property="og:url" content="https://kingarthur556.github.io/reactor/">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://kingarthur556.github.io/reactor/reactor_preview.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23050705'/%3E%3Cg fill='%23a8f21f'%3E%3Cpath id='a' d='M16.5 4.21A9 9 0 0 0 7.5 4.21L10.4 9.23A3.2 3.2 0 0 1 13.6 9.23Z'/%3E%3Cpath transform='rotate(120 12 12)' d='M16.5 4.21A9 9 0 0 0 7.5 4.21L10.4 9.23A3.2 3.2 0 0 1 13.6 9.23Z'/%3E%3Cpath transform='rotate(240 12 12)' d='M16.5 4.21A9 9 0 0 0 7.5 4.21L10.4 9.23A3.2 3.2 0 0 1 13.6 9.23Z'/%3E%3Ccircle cx='12' cy='12' r='1.7'/%3E%3C/g%3E%3C/svg%3E">
 <style>
 :root{--lime:#a8f21f;--dim:#2c3d0c;--bg:#050705;--app:#080b06;--panel:#0b0f08;--field:#0e1409;--txt:#e9f5d0;--muted:#7d8a6a;--amber:#f2c230;--red:#ff3b30;--on:#050705}
@@ -716,6 +717,41 @@ function makeLocalDB(){
   return{doc:docRef,collection:p=>colRef(p)};
 }
 
+
+/* ================= SUPABASE BACKEND (shared market, ranks, profiles) =================
+   Players are signed in anonymously (no registration). Everything lives in one table "docs". */
+const SUPA_URL='https://wcmhkafioiirdhgtljax.supabase.co';
+const SUPA_KEY='sb_publishable_5CXvwHB7MIA7qmY8MBZQYg_numPK0Ai';
+const OWNER_KEY='k7Qm2xVd9Lp4';   // open the site once with  #k7Qm2xVd9Lp4  at the end of the address to become the owner on this device
+try{if(location.hash==='#'+OWNER_KEY)localStorage.setItem('reactor_owner','1')}catch(e){}
+const isOwnerDevice=()=>{try{return localStorage.getItem('reactor_owner')==='1'}catch(e){return false}};
+async function makeSupaDB(){
+  const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+  let sess=(await sb.auth.getSession()).data.session;
+  if(!sess){const r=await sb.auth.signInAnonymously();if(r.error||!r.data||!r.data.session)throw (r.error||new Error('no session'));sess=r.data.session}
+  const uid=sess.user.id,subs=new Set();
+  const colOf=p=>p.startsWith('data/')?'wallet':p.split('/')[0];
+  const rid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+  const fail=e=>{throw (e&&e.code==='42501')?{code:'invalid_argument'}:e};
+  const poll=()=>subs.forEach(f=>f());
+  const kick=()=>setTimeout(poll,350);
+  setInterval(()=>{if(document.visibilityState==='visible')poll()},4000);
+  const dsnap=(p,row)=>({id:p.split('/').pop(),exists:!!row,data:()=>row?JSON.parse(JSON.stringify(row.data)):undefined});
+  function docRef(p){return{id:p.split('/').pop(),path:p,
+    get:async()=>{const r=await sb.from('docs').select('data').eq('path',p).maybeSingle();if(r.error)fail(r.error);return dsnap(p,r.data)},
+    set:async d=>{const r=await sb.from('docs').upsert({path:p,col:colOf(p),data:d,owner:uid,updated_at:new Date().toISOString()});if(r.error)fail(r.error);kick()},
+    delete:async()=>{const r=await sb.from('docs').delete().eq('path',p);if(r.error)fail(r.error);kick()},
+    acquire:async o=>{const r=await sb.rpc('acquire_lease',{p,h:String(o.holder),ttl:o.ttlMs||1200});if(r.error)fail(r.error);return{acquired:r.data===true}}}}
+  function colRef(c,flt=[]){const q={path:c,
+    where:(f,op,v)=>colRef(c,flt.concat([[f,v]])),orderBy:()=>q,limit:()=>q,
+    async fetch(){let r=sb.from('docs').select('path,data').eq('col',c).limit(1000);flt.forEach(([f,v])=>{r=r.eq('data->>'+f,String(v))});
+      const x=await r;if(x.error)fail(x.error);const docs=x.data.map(row=>dsnap(row.path,row));return{docs,size:docs.length,empty:!docs.length}},
+    get:()=>q.fetch(),
+    onSnapshot(next,err){const fn=async()=>{try{next(await q.fetch())}catch(e){if(err)err(e)}};subs.add(fn);fn();return()=>subs.delete(fn)},
+    doc:id=>docRef(c+'/'+(id||rid())),
+    add:async d=>{const p=c+'/'+rid();const r=await sb.from('docs').insert({path:p,col:c,data:d,owner:uid});if(r.error)fail(r.error);kick();return docRef(p)}};return q}
+  return{db:{doc:docRef,collection:p=>colRef(p)},uid};
+}
 let mk={db:null,uid:null,live:false,ro:false,ready:false,owner:false};
 let asks=[],bids=[],supply={},players=[],profile=null,sortMode='item',topSort='vd',topTier=0;
 const mailDone=new Set();
@@ -947,7 +983,13 @@ function setupScreen(){
 async function connect(){
   let db=null,uid=null,live=false,ro=false,owner=true;
   try{
-    if(typeof claude!=='undefined'&&claude&&claude.use){
+    if(window.supabase&&typeof SUPA_URL!=='undefined'){
+      const r=await Promise.race([makeSupaDB(),new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),8000))]);
+      db=r.db;uid=r.uid;live=true;owner=isOwnerDevice();
+    }
+  }catch(e){console.warn('supabase unavailable',e);db=null}
+  try{
+    if(!db&&typeof claude!=='undefined'&&claude&&claude.use){
       const [d,u]=await Promise.all([claude.use('db'),claude.use('user')]);
       if(d&&u){const id=await u.id();if(id){db=d;uid=String(id);live=true;try{ro=(await u.can('data.write'))===false}catch(e){}try{owner=await u.isOwner()}catch(e){owner=false}}}
     }
