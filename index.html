@@ -146,7 +146,7 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
 @media(max-width:700px){.layout{grid-template-columns:1fr;gap:12px}.dial{width:min(100%,250px)}}
 </style></head>
 <body class="boot">
-<div id="splash"><div class="gl" id="gl" data-text="SO BE CAREFUL">SO BE CAREFUL</div><div class="tap" id="tap" style="display:none">CLICK TO START</div></div>
+<div id="splash"><div class="gl" id="gl" data-text="BE CAREFUL">BE CAREFUL</div><div class="tap" id="tap" style="display:none">CLICK TO START</div></div>
 <main class="app" id="app">
 <header><div class="logo">REACTOR</div><div class="sup" id="sup"></div>
 <div class="right"><button class="snd" id="snd" aria-label="Sound"></button><div class="pts">POINTS<strong id="pts">1,000</strong></div></div></header>
@@ -996,7 +996,7 @@ async function connect(){
   }catch(e){}
   if(!db){db=makeLocalDB();uid='me';owner=true}
   mk={db,uid,live,ro,ready:false,owner};
-  $('live').textContent='[v3] '+(live?(ro?'LIVE · READ-ONLY':'LIVE · SHARED MARKET'):'OFFLINE · THIS DEVICE ONLY'+(window.__connErr?' · '+window.__connErr.slice(0,70):(window.supabase?'':' · LIBRARY NOT LOADED')));
+  $('live').textContent=(live?(ro?'LIVE · READ-ONLY':'LIVE · SHARED MARKET'):'OFFLINE · THIS DEVICE ONLY'+(window.__connErr?' · '+window.__connErr.slice(0,70):(window.supabase?'':' · LIBRARY NOT LOADED')));
   try{const p=await db.doc('players/'+uid).get();if(p.exists){const d=p.data();if(d&&d.name)profile={name:String(d.name),icon:Number(d.icon)||0}}}catch(e){}
   try{
     const w=await db.doc('data/users/'+uid+'/wallet').get();
@@ -1016,7 +1016,7 @@ async function connect(){
   mk.ready=true;
 }
 
-/* ----- splash: "SO BE CAREFUL" glitches in, riser, glitches out, riser is cut, game opens ----- */
+/* ----- splash: "BE CAREFUL" glitches in, riser, glitches out, riser is cut, game opens ----- */
 async function splash(){
   const gl=$('gl'),tap=$('tap');
   audio.init();
