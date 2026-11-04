@@ -151,10 +151,8 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
 .tdots i{width:7px;height:7px;border-radius:50%;background:var(--dim)}
 .tdots i.on{background:var(--lime)}
 .tbtns{display:flex;gap:8px}
-.tbtns .ok,.tbtns .go{flex:1 1 0;width:auto!important;min-width:0;height:46px;padding:0;border:1px solid var(--lime);border-radius:10px;font:inherit;font-size:15px;font-weight:900;letter-spacing:.15em;cursor:pointer}
-.tbtns .ok{background:var(--field);color:var(--lime)}
-.tbtns .go{background:var(--lime);color:var(--on)}
-.tbtns .ok:disabled,.tbtns .go:disabled{opacity:.3;cursor:not-allowed}
+.tbtns .go{flex:1;width:auto!important}
+.tbtns .ok{padding:12px 16px}
 </style></head>
 <body class="boot">
 <div id="splash"><div class="gl" id="gl" data-text="BE CAREFUL">BE CAREFUL</div><div class="tap" id="tap" style="display:none">CLICK TO START</div></div>
@@ -1131,9 +1129,8 @@ function tutorial(){
     o.querySelector('#tTitle').textContent=(i+1)+'/'+TX().length+' · '+TX()[i][0];
     o.querySelector('#tBody').innerHTML=TX()[i][1];
     o.querySelector('#tDots').innerHTML=TX().map((_,k)=>'<i class="'+(k===i?'on':'')+'"></i>').join('');
-    o.querySelector('#tBack').disabled=i===0;
-    o.querySelector('#tNext').disabled=i===TX().length-1;
-    o.querySelector('#tSkip').textContent=i===TX().length-1?'START PLAYING':'CLOSE';
+    o.querySelector('#tBack').style.visibility=i?'visible':'hidden';
+    o.querySelector('#tNext').textContent=i===TX().length-1?'START PLAYING':'NEXT';
   };
   o.querySelector('#tBack').onclick=()=>{if(i>0){i--;draw()}};
   o.querySelector('#tNext').onclick=()=>{if(i<TX().length-1){i++;draw()}else done()};
@@ -1166,7 +1163,7 @@ function fitNow(){const app=$('app');app.style.zoom=1;const pad=14,z=Math.min(1,
 function pickLang(){return new Promise(res=>{
   const o=overlay('<h2>LANGUAGE · ЯЗЫК</h2><button class="go" id="lRu">РУССКИЙ</button><button class="go" id="lEn">ENGLISH</button>');
   o.style.zIndex=1100;
-  const set=l=>{LANG=l;try{localStorage.setItem('reactor_lang',l)}catch(e){}audio.init();document.documentElement.lang=l;if(l==='ru')trNode(document.body);o.remove();res()};
+  const set=l=>{LANG=l;try{localStorage.setItem('reactor_lang',l)}catch(e){}window.__gest=true;audio.init();document.documentElement.lang=l;if(l==='ru')trNode(document.body);o.remove();res()};
   o.querySelector('#lRu').onclick=()=>set('ru');o.querySelector('#lEn').onclick=()=>set('en');
 })}
 async function boot(){
