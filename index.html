@@ -547,7 +547,7 @@ function canFreeze(){return run&&!busy&&!superOn&&freezeCharges()>0&&(ovN>0||po>
 function update(){
   const p=effPo(),r=R();
   $('pts').textContent=num(pts);$('pot').textContent=num(pot);
-  $('hint').textContent=!run?'':ovN===0?'NEXT OVERHEAT −'+Math.round(r.first*100)+'% OF STAKE':(ovN===1&&!superOn)?'NEXT OVERHEAT −'+Math.round(r.second*100)+'% OF POT':'';
+  $('hint').textContent=!run?'':ovN===0?'NEXT OVERHEAT −'+Math.round(r.first*100)+'% OF '+(superOn?'POT':'STAKE'):(ovN===1&&!superOn)?'NEXT OVERHEAT −'+Math.round(r.second*100)+'% OF POT':'';
   $('oN').textContent=Math.round((1-p)*100)+'%';$('oO').textContent=Math.round(p*100)+'%';
   $('go').disabled=busy||!walletReady||(!run&&!stakeOk());
   $('cash').style.visibility=run?'visible':'hidden';$('cash').textContent='CASH OUT '+num(pot);$('cash').disabled=busy||!run;
@@ -613,9 +613,9 @@ function finish(out){
     return;
   }
   const pct=ovN===1?r.first:r.second;
-  const lost=fix(Math.min(pot,ovN===1?stake0*r.first:pot*r.second));pot=fix(pot-lost);
+  const lost=fix(Math.min(pot,ovN===1?(superOn?pot:stake0)*r.first:pot*r.second));pot=fix(pot-lost);
   if(!superOn)po=BASE;
-  showCenter('OVERHEAT','−'+num(lost),AMBER,'−'+Math.round(pct*100)+'% '+(ovN===1?'OF STAKE':'OF POT'));
+  showCenter('OVERHEAT','−'+num(lost),AMBER,'−'+Math.round(pct*100)+'% '+(ovN===1&&!superOn?'OF STAKE':'OF POT'));
   audio.warn();syncMusic();update();
   pending=setTimeout(settle,1700);
 }
