@@ -580,7 +580,7 @@ function start(){
   const from=out==='normal'?0:1-p,size=out==='normal'?1-p:p;
   const target=(from+size*(0.1+0.8*Math.random()))*360;
   const cur=((rot%360)+360)%360,delta=(target-cur+360)%360;
-  const dur=2.4+Math.random()*2.4,turns=3+Math.floor(Math.random()*4);   // each spin lasts a different time (2.4-4.8 s)
+  const dur=1.5+Math.random()*4.5,turns=2+Math.round((dur-1.5)/4.5*4+Math.random());   // each spin lasts a different time (1.5-6 s); longer spin = more turns
   const nd=$('needle');nd.style.transition=`transform ${dur.toFixed(2)}s cubic-bezier(.12,.75,.12,1)`;
   rot+=360*turns+delta;nd.style.transform=`rotate(${rot}deg)`;
   setTimeout(()=>finish(out),Math.round(dur*1000)+100);
