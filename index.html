@@ -203,7 +203,7 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
   </section>
 </div></div>
 <div class="view" id="vMarket"><div class="mk">
-  <div class="mkhead"><div class="seg" id="seg"><button class="on" data-s="sShop">SHOP</button><button data-s="sMy">MY</button></div><span class="live" id="live">CONNECTING…</span></div>
+  <div class="mkhead"><div class="seg" id="seg"><button class="on" data-s="sShop">ALL</button><button data-s="sMy">MY</button></div><span class="live" id="live">CONNECTING…</span></div>
   <div class="mkbody" id="mkbody">
     <div class="sub on" id="sShop"><div class="shop" id="shop"></div><div id="sOffers"></div></div>
     <div class="sub" id="sMy"><div id="myAll"></div></div>
@@ -247,7 +247,7 @@ const RU_EXACT={
 "OVERHEATS CLEARED":"ПЕРЕГРЕВЫ СНЯТЫ","SUPER":"СУПЕР","SUPER GAME":"СУПЕР-ИГРА","FROZEN: 3 OVERHEATS AVAILABLE AGAIN":"ЗАМОРОЖЕНО: СНОВА ДОСТУПНЫ 3 ПЕРЕГРЕВА",
 "SUPER OVER":"СУПЕР-ИГРА ЗАКОНЧЕНА","INVALID CODE":"НЕВЕРНЫЙ КОД","WAIT FOR THE ROUND":"ДОЖДИТЕСЬ КОНЦА РАУНДА","THIS CODE IS ALREADY USED":"ЭТОТ КОД УЖЕ ИСПОЛЬЗОВАН",
 "STAKE":"СТАВКА","MAKE REQUEST":"СДЕЛАТЬ ЗАПРОС","REQUEST A PRICE":"ЗАПРОСИТЬ ЦЕНУ","NO REAL SELLERS YET, ONLY THE SYSTEM. WAIT UNTIL SOMEONE LISTS AN OFFER":"ПОКА НЕТ НАСТОЯЩИХ ПРОДАВЦОВ, ЕСТЬ ТОЛЬКО СИСТЕМА. ОЖИДАЙТЕ, ПОКА КТО-ТО ВЫСТАВИТ ПРЕДЛОЖЕНИЕ","REQUEST":"ЗАПРОСИТЬ","Delete account":"Удалить аккаунт","DELETE ACCOUNT":"УДАЛИТЬ АККАУНТ","SYSTEM":"СИСТЕМА","CHOOSE AN ITEM":"ВЫБЕРИТЕ ПРЕДМЕТ","ON SALE":"В ПРОДАЖЕ","FROM":"ОТ","NOTHING ON SALE":"НИЧЕГО НЕ ПРОДАЁТСЯ","NO REQUESTS":"НЕТ ЗАПРОСОВ","REQUESTS":"ЗАПРОСЫ","UP TO":"ДО","NOTHING HERE YET":"ЗДЕСЬ ПОКА ПУСТО","YOUR OFFERS":"ВАШИ ПРЕДЛОЖЕНИЯ","THE SYSTEM STILL SELLS THIS ITEM":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ","THE SYSTEM STILL SELLS THIS ITEM. BUY IT IN OFFERS, REQUESTS ARE NOT POSSIBLE":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ. КУПИТЕ ЕГО В ПРЕДЛОЖЕНИЯХ, ЗАПРОСЫ НЕВОЗМОЖНЫ","LEFT":"ОСТАЛОСЬ","YOUR OFFERS · ITEMS YOU PUT UP FOR SALE":"ВАШИ ПРЕДЛОЖЕНИЯ · ПРЕДМЕТЫ, ВЫСТАВЛЕННЫЕ НА ПРОДАЖУ","YOUR BUY REQUESTS":"ВАШИ ЗАПРОСЫ НА ПОКУПКУ","NO OFFERS YET":"ПОКА НЕТ ПРЕДЛОЖЕНИЙ","CODES":"КОДЫ","USED TODAY":"ИСПОЛЬЗОВАН СЕГОДНЯ","TAP TO OPEN THE RIDDLE":"НАЖМИТЕ, ЧТОБЫ ОТКРЫТЬ РЕБУС","CODES · SOLVE THE RIDDLE, ENTER THE CODE":"КОДЫ · РАЗГАДАЙТЕ РЕБУС, ВВЕДИТЕ КОД","CODE":"КОД","PRICE":"ЦЕНА","NICKNAME":"НИКНЕЙМ","MARKET":"РЫНОК","RANKS":"РЕЙТИНГ","PROFILE":"ПРОФИЛЬ",
-"SHOP":"МАГАЗИН","OFFERS":"ПРЕДЛОЖЕНИЯ","REQUESTS":"ЗАПРОСЫ","MY":"МОЁ","CONNECTING…":"ПОДКЛЮЧЕНИЕ…",
+"SHOP":"МАГАЗИН","ALL":"ВСЕ","OFFERS":"ПРЕДЛОЖЕНИЯ","REQUESTS":"ЗАПРОСЫ","MY":"МОЁ","CONNECTING…":"ПОДКЛЮЧЕНИЕ…",
 "LIVE · SHARED MARKET":"ОНЛАЙН · ОБЩИЙ РЫНОК","LIVE · READ-ONLY":"ОНЛАЙН · ТОЛЬКО ЧТЕНИЕ",
 "SOLD OUT":"РАСПРОДАНО","BUY":"КУПИТЬ","SELL":"ПРОДАТЬ","CANCEL":"ОТМЕНА","LIST":"ВЫСТАВИТЬ","REQUEST":"ЗАПРОСИТЬ","YOU":"ВЫ",
 "SORT":"СОРТИРОВКА","ITEM":"ПРЕДМЕТ","BY":"ОТ","PRICE ▲":"ЦЕНА ▲","PRICE ▼":"ЦЕНА ▼","VALUE ▼":"ЦЕННОСТЬ ▼","VALUE ▲":"ЦЕННОСТЬ ▲",
@@ -434,12 +434,12 @@ const audio=(()=>{
 
 /* ================= GAME ================= */
 const LIME='#a8f21f',PURP='#b980ff',AMBER='#f2c230',RED='#ff3b30';
-const START_PTS=1000,BASE=.2,STEP=.1,PO_MAX=.6,SUPER_PO=.1;      // normal: overheat chance 20% -> 60%; super: always 10%
+const START_PTS=1000,BASE=.15,STEP=.15,PO_MAX=.45,SUPER_PO=.1;      // normal: overheat chance 15% -> 30% -> 45%; super: always 10%
 const RULES={
   normal:{gain:.2,first:.15,second:.40,acc:3},  // overheat #1 -15% of stake, #2 -40% of pot, #3 = accident
   super:{gain:.5,first:.50,second:0,acc:2}      // overheat #1 -50% of stake, #2 = accident
 };
-const FREEZE_MS=60*60*1000,CODE_COOLDOWN=24*60*60*1000,SUPER_SECS=[5,15,60];
+const FREEZE_MS=60*60*1000,CODE_COOLDOWN=24*60*60*1000,SUPER_SECS=[15,60];
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const fix=x=>Math.round(x*100)/100;
@@ -457,7 +457,7 @@ const CODE_WORDS=['ION','VOLT','CORE','ROD','FUSE','BEAM','FLUX','GRID','PULSE',
 const FIXED_CODES={'2026-11-04':['START','REACTOR','END']};
 function hashStr(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function codesFor(day){return ['START','REACTOR','END']}
+function codesFor(day){return ['REACTOR','END']}
 const dayStr=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 
 /* ----- ring ----- */
@@ -605,21 +605,18 @@ function superOff(){
   audio.superOff();syncMusic();update();
 }
 /* ================= CODES TAB (riddles) ================= */
-const CODE_ALIASES=[['START','СТАРТ'],['REACTOR','РЕАКТОР'],['END','КОНЕЦ']];
+const CODE_ALIASES=[['REACTOR','РЕАКТОР'],['END','КОНЕЦ']];
 const SVGW=(inner)=>'<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg>';
 const PUZ_ART=[
-SVGW('<defs><radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#c8ff00" stop-opacity=".9"/><stop offset="1" stop-color="#c8ff00" stop-opacity="0"/></radialGradient></defs><rect width="400" height="200" fill="#050705"/>'+Array.from({length:14},(_,i)=>'<line x1="200" y1="100" x2="'+(200+300*Math.cos(i*Math.PI/7))+'" y2="'+(100+300*Math.sin(i*Math.PI/7))+'" stroke="#c8ff00" stroke-opacity=".18" stroke-width="2"/>').join('')+'<circle cx="200" cy="100" r="95" fill="url(#g1)"/><path d="M0 150 Q50 140 100 150 T200 150 T300 150 T400 150 V200 H0Z" fill="#0b1a02" stroke="#c8ff00" stroke-opacity=".4"/><path d="M0 170 Q50 160 100 170 T200 170 T300 170 T400 170" fill="none" stroke="#c8ff00" stroke-opacity=".25"/><circle cx="200" cy="100" r="34" fill="#050705" stroke="#c8ff00" stroke-width="5"/><path d="M200 78 V100" stroke="#c8ff00" stroke-width="6" stroke-linecap="round"/><path d="M185 87 A22 22 0 1 0 215 87" fill="none" stroke="#c8ff00" stroke-width="6" stroke-linecap="round"/><text x="200" y="30" fill="#c8ff00" font-size="11" text-anchor="middle" letter-spacing="3" font-family="monospace">IN THE BEGINNING · THE DEEP WAS DARK</text>'),
 SVGW('<rect width="400" height="200" fill="#050705"/><g stroke="#c8ff00" stroke-opacity=".12">'+Array.from({length:10},(_,i)=>'<line x1="'+(i*45)+'" y1="0" x2="'+(i*45)+'" y2="200"/>').join('')+'</g><rect x="140" y="170" width="120" height="16" fill="#12200a" stroke="#c8ff00"/><path d="M155 170 V70 Q155 40 200 40 Q245 40 245 70 V170Z" fill="#0b1a02" stroke="#c8ff00" stroke-width="3"/><circle cx="200" cy="95" r="26" fill="#c8ff00" fill-opacity=".85"/><circle cx="200" cy="95" r="40" fill="none" stroke="#c8ff00" stroke-opacity=".5" stroke-dasharray="4 6"/><circle cx="200" cy="95" r="54" fill="none" stroke="#c8ff00" stroke-opacity=".25" stroke-dasharray="2 8"/><path d="M165 140 H235M165 152 H235" stroke="#c8ff00" stroke-opacity=".6"/><path d="M60 150 C80 90 110 170 140 110 S150 60 150 60 M340 150 C320 90 290 170 260 110 S250 60 250 60" fill="none" stroke="#ff4d4d" stroke-width="5" stroke-linecap="round" stroke-opacity=".85"/><circle cx="150" cy="60" r="6" fill="#ff4d4d"/><circle cx="250" cy="60" r="6" fill="#ff4d4d"/><text x="200" y="22" fill="#c8ff00" font-size="11" text-anchor="middle" letter-spacing="3" font-family="monospace">THE SUN IN A JAR · NINE SERPENTS</text>'),
 SVGW('<rect width="400" height="200" fill="#050705"/><text x="52" y="120" fill="#c8ff00" font-size="90" font-family="serif" text-anchor="middle">A</text><text x="348" y="120" fill="#c8ff00" font-size="90" font-family="serif" text-anchor="middle">Ω</text><path d="M110 100 C150 40 180 40 200 100 S250 160 290 100" fill="none" stroke="#c8ff00" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 9"/><rect x="150" y="140" width="100" height="34" rx="4" fill="#0b1a02" stroke="#c8ff00"/><text x="162" y="162" fill="#c8ff00" font-size="14" font-family="monospace">&gt; _ _ _</text><rect x="232" y="150" width="9" height="16" fill="#c8ff00"><animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/></rect><text x="200" y="26" fill="#c8ff00" font-size="11" text-anchor="middle" letter-spacing="3" font-family="monospace">THE FIRST AND THE LAST · THE FINAL LINE</text>')
 ];
 const PUZ={
 en:[
- {t:'THE FIRST WORD',s:'In the beginning the deep was dark and silent, and the water was empty. Then one command was spoken, and the first light poured across the surface. Every machine and every world begins the same way: somebody presses the glowing button, the screen lights up, and the program wakes. The same word is on the button that begins every round of this game. What is the word?'},
  {t:'THE SUN IN A JAR',s:'Year 2041. A lab hides a technology that does not exist yet: a sealed heart of fire that holds a small artificial sun and feeds a whole city for a thousand years. Like Noah\'s ark it was built to survive any flood. One night nine hackers, the Nine Serpents, slither into its cooling code and try to push the core into overheat, while engineers race to keep it stable. This game carries its name. What is it called?'},
  {t:'THE LAST LINE',s:'It is written: "I am the Alpha and the Omega, the beginning and the ..." The same thing happens in the code. After the final command, the last line of every script, every book and every story, a lone cursor blinks and the terminal prints one short word. That is how the world of this puzzle closes. Which word completes the sentence?'}
 ],
 ru:[
- {t:'ПЕРВОЕ СЛОВО',s:'В начале бездна была тёмной и безмолвной, и вода была пустой. Потом прозвучала одна команда, и первый свет разлился по поверхности. Любая машина и любой мир начинаются одинаково: кто-то нажимает светящуюся кнопку, загорается экран и программа просыпается. То же слово стоит на кнопке, которая начинает каждый раунд этой игры. Что это за слово? (Ответ можно ввести по-английски или по-русски.)'},
  {t:'СОЛНЦЕ В БАНКЕ',s:'2041 год. В лаборатории спрятана технология, которой ещё не существует: запечатанное сердце огня, в котором живёт маленькое искусственное солнце и кормит целый город тысячу лет. Как ковчег Ноя, оно построено, чтобы пережить любой потоп. Однажды ночью девять хакеров, Девять Змей, проползают в код охлаждения и пытаются довести ядро до перегрева, пока инженеры борются за его стабильность. Игра носит его имя. Как оно называется?'},
  {t:'ПОСЛЕДНЯЯ СТРОКА',s:'Написано: «Я есмь Альфа и Омега, начало и ...» То же происходит в коде. После последней команды, в последней строке любого скрипта, любой книги и любой истории, мигает одинокий курсор, и терминал печатает одно короткое слово. Так закрывается мир этой загадки. Какое слово заканчивает фразу?'}
 ]};
@@ -1006,7 +1003,7 @@ function bestFor(it){
   const all=c.map(x=>x.price).concat(A.map(a=>a.price));
   A.filter(a=>a.seller!==mk.uid).forEach(a=>c.push({price:a.price,id:a.id}));
   c.sort((x,y)=>x.price-y.price||(x.sys?-1:1));
-  return{shown:all.length?Math.min(...all):null,buy:c[0]||null};
+  return{shown:c[0]?c[0].price:null,buy:c[0]||null};
 }
 function renderMarket(){
   if(!$('left_eden'))return;
