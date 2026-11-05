@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>REACTOR</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <meta property="og:title" content="REACTOR"><meta property="og:type" content="website">
@@ -15,7 +15,7 @@ body.super{--lime:#b980ff;--dim:#3b2260;--bg:#06040a;--app:#0a0710;--panel:#0d09
 html,body{height:100%}
 body{margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;padding:14px;background:var(--bg);color:var(--txt);font-family:ui-monospace,"SF Mono",Consolas,"Roboto Mono",monospace;transition:background .4s}
 body.boot .app{visibility:hidden}
-.app{position:relative;width:min(100%,960px);background:var(--app);border:1px solid var(--dim);border-radius:18px;padding:clamp(14px,2.4vw,24px);transition:border-color .2s,box-shadow .2s,background .4s}
+.app{position:relative;width:min(100%,960px);background:var(--app);border:0;border-radius:0;padding:clamp(14px,2.4vw,24px);transition:border-color .2s,box-shadow .2s,background .4s}
 .app.bad{border-color:var(--red);box-shadow:0 0 0 1px var(--red),0 0 40px #ff3b3055}
 header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
 .logoi{vertical-align:-3px;margin-left:2px;flex:none}
@@ -31,9 +31,11 @@ header{display:flex;justify-content:space-between;align-items:center;gap:12px;ma
 .pts strong{margin-left:0;font-size:18px;color:var(--lime);transition:color .2s}
 .pts strong.loss{color:var(--red)}
 .views{display:grid}
-.view{grid-area:1/1;display:flex;flex-direction:column;justify-content:center;visibility:hidden;pointer-events:none;opacity:0;transition:opacity .2s}
+.view{grid-area:1/1;display:flex;flex-direction:column;justify-content:flex-start;visibility:hidden;pointer-events:none;opacity:0;transition:opacity .2s}
 .view.on{visibility:visible;pointer-events:auto;opacity:1}
 .view>.layout,.view>.mk{width:100%}
+.view>.layout{margin:auto 0}
+.view>.mk{flex:1 1 auto;min-height:0}
 .layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center}
 .dial{touch-action:none;cursor:grab;position:relative;width:min(100%,340px);aspect-ratio:1;margin:0 auto}
 .dial svg{position:absolute;inset:0;width:100%;height:100%}
@@ -42,7 +44,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:12px;ma
 .center .lbl{font-size:12px;letter-spacing:.2em;font-weight:800}
 .center .val{font-size:clamp(22px,4.5vw,34px);font-weight:900}
 .center .sub{font-size:10px;letter-spacing:.15em;color:var(--muted)}
-.panel{background:var(--panel);border:1px solid var(--dim);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:9px;transition:background .4s}
+.panel{background:transparent;border:0;border-radius:0;padding:4px 0;display:flex;flex-direction:column;gap:9px;transition:background .4s}
 .potbox{border:1px solid var(--dim);border-radius:10px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center}
 .potbox .pl{color:var(--muted);font-size:12px;letter-spacing:.2em}
 .potbox .pv{font-size:24px;font-weight:900;color:var(--lime)}
@@ -51,7 +53,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:12px;ma
 .odd{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--dim);border-radius:10px;padding:7px 14px;font-size:13px;letter-spacing:.08em}
 .odd i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:10px}
 .odd b{font-size:17px}
-input{min-width:0;width:100%;background:var(--field);border:1px solid var(--dim);border-radius:8px;padding:10px;color:var(--txt);font:inherit;font-size:15px}
+input{min-width:0;width:100%;background:var(--field);border:1px solid var(--dim);border-radius:8px;padding:10px;color:var(--txt);font:inherit;font-size:calc(16px / var(--z,1))}
 input:focus{outline:1px solid var(--lime)}
 #code{text-transform:uppercase;letter-spacing:.15em}
 .go:disabled,.fix:disabled,.cash:disabled,.stb:disabled{opacity:.4;cursor:not-allowed}
@@ -66,19 +68,19 @@ input:focus{outline:1px solid var(--lime)}
 .ok{border:1px solid var(--dim);background:var(--field);color:var(--lime);border-radius:8px;padding:0 16px;font:inherit;font-weight:800;cursor:pointer}
 .msg{min-height:14px;font-size:11px;letter-spacing:.1em;color:var(--lime)}
 .msg.err{color:var(--red)}
-.tabbar{display:flex;gap:5px;margin-top:14px;border-top:1px solid var(--dim);padding-top:12px}
-.tabb{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 4px;border:1px solid var(--dim);background:var(--field);color:var(--muted);border-radius:12px;font:inherit;font-size:9px;letter-spacing:.1em;cursor:pointer}
+.tabbar{display:flex;gap:4px;margin-top:14px;border-top:1px solid var(--dim);padding-top:12px}
+.tabb{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 1px;border:1px solid var(--dim);background:var(--field);color:var(--muted);border-radius:12px;font:inherit;font-size:8px;letter-spacing:.04em;cursor:pointer}
 .tabb.on{color:var(--on);background:var(--lime);border-color:var(--lime)}
 .tabb:disabled{opacity:.35;cursor:not-allowed}
 .shop{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.card{border:1px solid var(--dim);border-radius:14px;background:var(--panel);padding:14px;display:flex;flex-direction:column;gap:10px}
+.card{border:0;border-radius:0;background:transparent;padding:6px 0 14px;display:flex;flex-direction:column;gap:10px}
 .art{height:230px;background:#030403;border:1px solid var(--dim);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .art svg,.art canvas{width:100%;height:100%;display:block}
 .art canvas{cursor:grab;touch-action:none}
 .nm{font-size:17px;font-weight:900;letter-spacing:.12em;color:var(--lime)}
 .pr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .pr b{font-size:22px;color:var(--txt)}
-.pr .sb[data-act=reqStart]{width:92px;min-width:0;white-space:normal;line-height:1.25;text-align:center;padding:6px 8px}
+.pr .sb[data-act=reqStart]{width:92px;min-width:0;white-space:normal;line-height:1.25;text-align:center;padding:6px 8px;display:flex;align-items:center;justify-content:center;align-self:center}
 .buy{border:0;border-radius:10px;padding:12px;background:var(--lime);color:var(--on);font:inherit;font-size:15px;font-weight:900;letter-spacing:.12em;cursor:pointer}
 .buy:disabled{opacity:.4;cursor:not-allowed}
 .mk{display:flex;flex-direction:column;gap:10px}
@@ -87,7 +89,7 @@ input:focus{outline:1px solid var(--lime)}
 .seg button,.sortbar button{border:1px solid var(--dim);background:var(--field);color:var(--muted);border-radius:8px;padding:7px 12px;font:inherit;font-size:11px;letter-spacing:.15em;cursor:pointer}
 .seg button.on,.sortbar button.on{background:var(--lime);color:var(--on);border-color:var(--lime);font-weight:800}
 .live{font-size:10px;letter-spacing:.15em;color:var(--muted)}
-.mkbody{height:390px;overflow:auto;border:1px solid var(--dim);border-radius:12px;background:var(--panel);padding:12px;position:relative}
+.mkbody{flex:1 1 0;height:0;min-height:380px;overflow:auto;border:0;border-radius:0;background:transparent;padding:4px 0;position:relative}
 .sub{display:none}.sub.on{display:block}
 .mkbody .art{height:150px}
 .ed{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.12em;color:var(--muted)}
@@ -196,27 +198,20 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
 .thm button{min-width:92px;border:1px solid var(--lime);background:transparent;color:var(--lime);border-radius:8px;padding:8px 10px;font:inherit;font-size:11px;font-weight:800;letter-spacing:.1em;cursor:pointer}
 .thm.on button{background:var(--lime);color:var(--on)}
 
-body.super .showcase{display:none}
-.showcase{display:flex;align-items:center;gap:8px;border:1px solid var(--dim);background:var(--field);border-radius:10px;padding:6px 8px;margin-bottom:10px;min-height:58px;cursor:pointer;perspective:400px;overflow:hidden}
-.sc-i{position:relative;width:42px;height:46px;flex:none;border:1px solid var(--dim);border-radius:8px;background:#030403;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 10px color-mix(in srgb,var(--lime) 25%,transparent)}
-.sc-i canvas,.rm-a canvas{width:100%;height:100%;display:block}
-.sc-i.lock{opacity:.35;box-shadow:none;border-style:dashed;color:var(--muted);font-size:16px}
-.sc-i.new{animation:scnew 1.4s ease-out 2;border-color:var(--lime)}
-.sc-i b{position:absolute;right:2px;bottom:1px;font-size:10px;color:var(--lime);text-shadow:0 0 4px #000}
-.sc-t{flex:1;min-width:0;font-size:10px;letter-spacing:.12em;color:var(--muted);text-align:right;line-height:1.4}
-.sc-t b{display:block;color:var(--lime);font-size:13px}
-@keyframes scspin{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
-@keyframes scnew{0%{box-shadow:0 0 0 0 var(--lime)}60%{box-shadow:0 0 0 12px transparent}100%{box-shadow:0 0 10px transparent}}
 .room{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .rm-c{border:1px solid var(--dim);background:var(--panel);border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;position:relative}
 .rm-c.pin{border-color:var(--lime)}
 .rm-a{width:100%;height:130px;background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--lime) 18%,transparent),transparent 65%),#030403;border-radius:8px;display:grid;place-items:center;perspective:500px;overflow:hidden;position:relative}
 .rm-a::after{content:"";position:absolute;left:12%;right:12%;bottom:8px;height:6px;border-radius:50%;background:var(--lime);opacity:.25;filter:blur(3px)}
-.rm-a canvas{touch-action:none;cursor:grab}
+.rm-a canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 @keyframes rmbob{50%{translate:0 -4px}}
 .rm-c .n{font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--lime)}
 .rm-c .v{font-size:10px;color:var(--muted)}
 .rm-c button{border:1px solid var(--dim);background:transparent;color:var(--lime);border-radius:7px;font:inherit;font-size:10px;font-weight:800;letter-spacing:.1em;padding:5px 8px;cursor:pointer}
+.chh{position:fixed;width:34px;height:34px;z-index:5;pointer-events:none}
+.chh i{position:absolute;left:-2px;top:-6px;width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--lime) 45%,transparent);border:2px solid var(--lime);transition:transform .2s}
+.chh.down i{transform:scale(1.5)}
+.chh svg{position:absolute;left:6px;top:6px;filter:drop-shadow(0 2px 3px #000)}
 </style></head>
 <body class="boot">
 <div id="splash"><div class="gl" id="gl" data-text="BE CAREFUL">BE CAREFUL</div><div class="tap" id="tap" style="display:none">CLICK TO START</div></div>
@@ -232,7 +227,6 @@ body.super .showcase{display:none}
     <div class="center" id="center"></div>
   </section>
   <section class="panel">
-    <div class="showcase" id="showcase"></div>
     <div class="potbox"><span class="pl">POT</span><span class="pv" id="pot">0</span></div>
     <div class="hint" id="hint"></div>
     <div class="odds">
@@ -255,15 +249,19 @@ body.super .showcase{display:none}
   <div class="mmsg" id="mmsg"></div>
 </div></div>
 <div class="view" id="vTop"><div class="mk">
-  <div class="mkhead"><div class="seg" id="topSort"><button class="on" data-k="vd">VALUE ▼</button><button data-k="va">VALUE ▲</button></div><span class="live" id="topInfo"></span></div>
+  <div class="mkhead"><div class="live" id="topHead">RANKS</div><span class="live" id="topInfo"></span></div>
   <div class="mkbody" id="topBody"></div>
+</div></div>
+<div class="view" id="vColl"><div class="mk">
+  <div class="mkhead"><div class="live" id="collHead">COLLECTION</div></div>
+  <div class="mkbody" id="collBody"></div>
 </div></div>
 <div class="view" id="vCodes"><div class="mk">
   <div class="mkhead"><div class="live" id="cHead">CODES · SOLVE THE RIDDLE, ENTER THE CODE</div></div>
   <div class="mkbody" id="codesBody"></div>
   <div class="mmsg" id="cmsg"></div>
 </div></div>
-<div class="view" id="vProfile"><div class="mk"><div class="mkbody" id="profBody" style="height:420px">
+<div class="view" id="vProfile"><div class="mk"><div class="mkbody" id="profBody">
   <div class="pfhead"><div class="av big" id="pfAv"></div><div class="col"><input id="pfName" maxlength="16" placeholder="NICKNAME"><button class="sb" id="pfSave">SAVE</button></div></div>
   <div class="mh">ICON</div><div class="icons" id="pfIcons"></div>
   <div class="mh">THEME</div><div class="themes" id="pfThemes"></div><div class="mmsg" id="thMsg"></div>
@@ -275,6 +273,7 @@ body.super .showcase{display:none}
 <nav class="tabbar">
 <button class="tabb on" data-t="radar"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><g id="tf"><path d="M16.5 4.21A9 9 0 0 0 7.5 4.21L10.4 9.23A3.2 3.2 0 0 1 13.6 9.23Z"/></g><use href="#tf" transform="rotate(120 12 12)"/><use href="#tf" transform="rotate(240 12 12)"/><circle cx="12" cy="12" r="1.7"/></svg>REACTOR</button>
 <button class="tabb" data-t="market"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3"/><path d="M5 12v8h14v-8"/><path d="M10 20v-4h4v4"/></svg>MARKET</button>
+<button class="tabb" data-t="coll"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>COLLECTION</button>
 <button class="tabb" data-t="top"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20v-7h4v7M10 20V6h4v14M15 20v-10h4v10"/></svg>RANKS</button>
 <button class="tabb" data-t="codes"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M15 12v2"/></svg>CODES</button>
 <button class="tabb" data-t="profile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>PROFILE</button>
@@ -291,7 +290,7 @@ const RU_EXACT={
 "EVERYTHING LOST":"ВСЁ ПОТЕРЯНО","START":"СТАРТ","CASH OUT":"ВЫВЕСТИ","FREEZE":"ЗАМОРОЗКА","FREEZE —":"ЗАМОРОЗКА —","RESET":"СБРОС",
 "OVERHEATS CLEARED":"ПЕРЕГРЕВЫ СНЯТЫ","SUPER":"СУПЕР","SUPER GAME":"СУПЕР-ИГРА","FROZEN: 3 OVERHEATS AVAILABLE AGAIN":"ЗАМОРОЖЕНО: СНОВА ДОСТУПНЫ 3 ПЕРЕГРЕВА",
 "SUPER OVER":"СУПЕР-ИГРА ЗАКОНЧЕНА","INVALID CODE":"НЕВЕРНЫЙ КОД","WAIT FOR THE ROUND":"ДОЖДИТЕСЬ КОНЦА РАУНДА","THIS CODE IS ALREADY USED":"ЭТОТ КОД УЖЕ ИСПОЛЬЗОВАН",
-"STAKE":"СТАВКА","THEME":"ТЕМА","MAKE REQUEST":"СДЕЛАТЬ ЗАПРОС","REQUEST A PRICE":"ЗАПРОСИТЬ ЦЕНУ","NO REAL SELLERS YET, ONLY THE SYSTEM. WAIT UNTIL SOMEONE LISTS AN OFFER":"ПОКА НЕТ НАСТОЯЩИХ ПРОДАВЦОВ, ЕСТЬ ТОЛЬКО СИСТЕМА. ОЖИДАЙТЕ, ПОКА КТО-ТО ВЫСТАВИТ ПРЕДЛОЖЕНИЕ","REQUEST":"ЗАПРОСИТЬ","Delete account":"Удалить аккаунт","DELETE ACCOUNT":"УДАЛИТЬ АККАУНТ","SYSTEM":"СИСТЕМА","CHOOSE AN ITEM":"ВЫБЕРИТЕ ПРЕДМЕТ","ON SALE":"В ПРОДАЖЕ","FROM":"ОТ","NOTHING ON SALE":"НИЧЕГО НЕ ПРОДАЁТСЯ","NO REQUESTS":"НЕТ ЗАПРОСОВ","REQUESTS":"ЗАПРОСЫ","UP TO":"ДО","NOTHING HERE YET":"ЗДЕСЬ ПОКА ПУСТО","YOUR OFFERS":"ВАШИ ПРЕДЛОЖЕНИЯ","THE SYSTEM STILL SELLS THIS ITEM":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ","THE SYSTEM STILL SELLS THIS ITEM. BUY IT IN OFFERS, REQUESTS ARE NOT POSSIBLE":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ. КУПИТЕ ЕГО В ПРЕДЛОЖЕНИЯХ, ЗАПРОСЫ НЕВОЗМОЖНЫ","LEFT":"ОСТАЛОСЬ","YOUR OFFERS · ITEMS YOU PUT UP FOR SALE":"ВАШИ ПРЕДЛОЖЕНИЯ · ПРЕДМЕТЫ, ВЫСТАВЛЕННЫЕ НА ПРОДАЖУ","YOUR BUY REQUESTS":"ВАШИ ЗАПРОСЫ НА ПОКУПКУ","NO OFFERS YET":"ПОКА НЕТ ПРЕДЛОЖЕНИЙ","CODES":"КОДЫ","USED TODAY":"ИСПОЛЬЗОВАН СЕГОДНЯ","TAP TO OPEN THE RIDDLE":"НАЖМИТЕ, ЧТОБЫ ОТКРЫТЬ РЕБУС","CODES · SOLVE THE RIDDLE, ENTER THE CODE":"КОДЫ · РАЗГАДАЙТЕ РЕБУС, ВВЕДИТЕ КОД","CODE":"КОД","PRICE":"ЦЕНА","NICKNAME":"НИКНЕЙМ","MARKET":"РЫНОК","RANKS":"РЕЙТИНГ","PROFILE":"ПРОФИЛЬ",
+"STAKE":"СТАВКА","ALL COLLECTIONS":"ВСЕ КОЛЛЕКЦИИ","MY COLLECTION":"МОЯ КОЛЛЕКЦИЯ","THEME":"ТЕМА","MAKE REQUEST":"СДЕЛАТЬ ЗАПРОС","REQUEST A PRICE":"ЗАПРОСИТЬ ЦЕНУ","NO REAL SELLERS YET, ONLY THE SYSTEM. WAIT UNTIL SOMEONE LISTS AN OFFER":"ПОКА НЕТ НАСТОЯЩИХ ПРОДАВЦОВ, ЕСТЬ ТОЛЬКО СИСТЕМА. ОЖИДАЙТЕ, ПОКА КТО-ТО ВЫСТАВИТ ПРЕДЛОЖЕНИЕ","REQUEST":"ЗАПРОСИТЬ","Delete account":"Удалить аккаунт","DELETE ACCOUNT":"УДАЛИТЬ АККАУНТ","SYSTEM":"СИСТЕМА","CHOOSE AN ITEM":"ВЫБЕРИТЕ ПРЕДМЕТ","ON SALE":"В ПРОДАЖЕ","FROM":"ОТ","NOTHING ON SALE":"НИЧЕГО НЕ ПРОДАЁТСЯ","NO REQUESTS":"НЕТ ЗАПРОСОВ","REQUESTS":"ЗАПРОСЫ","UP TO":"ДО","NOTHING HERE YET":"ЗДЕСЬ ПОКА ПУСТО","YOUR OFFERS":"ВАШИ ПРЕДЛОЖЕНИЯ","THE SYSTEM STILL SELLS THIS ITEM":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ","THE SYSTEM STILL SELLS THIS ITEM. BUY IT IN OFFERS, REQUESTS ARE NOT POSSIBLE":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ. КУПИТЕ ЕГО В ПРЕДЛОЖЕНИЯХ, ЗАПРОСЫ НЕВОЗМОЖНЫ","LEFT":"ОСТАЛОСЬ","YOUR OFFERS · ITEMS YOU PUT UP FOR SALE":"ВАШИ ПРЕДЛОЖЕНИЯ · ПРЕДМЕТЫ, ВЫСТАВЛЕННЫЕ НА ПРОДАЖУ","YOUR BUY REQUESTS":"ВАШИ ЗАПРОСЫ НА ПОКУПКУ","NO OFFERS YET":"ПОКА НЕТ ПРЕДЛОЖЕНИЙ","CODES":"КОДЫ","USED TODAY":"ИСПОЛЬЗОВАН СЕГОДНЯ","TAP TO OPEN THE RIDDLE":"НАЖМИТЕ, ЧТОБЫ ОТКРЫТЬ РЕБУС","CODES · SOLVE THE RIDDLE, ENTER THE CODE":"КОДЫ · РАЗГАДАЙТЕ РЕБУС, ВВЕДИТЕ КОД","CODE":"КОД","PRICE":"ЦЕНА","NICKNAME":"НИКНЕЙМ","MARKET":"РЫНОК","RANKS":"РЕЙТИНГ","PROFILE":"ПРОФИЛЬ",
 "SHOP":"МАГАЗИН","ALL":"ВСЕ","OFFERS":"ПРЕДЛОЖЕНИЯ","REQUESTS":"ЗАПРОСЫ","MY":"МОЁ","CONNECTING…":"ПОДКЛЮЧЕНИЕ…",
 "LIVE · SHARED MARKET":"ОНЛАЙН · ОБЩИЙ РЫНОК","LIVE · READ-ONLY":"ОНЛАЙН · ТОЛЬКО ЧТЕНИЕ",
 "SOLD OUT":"РАСПРОДАНО","BUY":"КУПИТЬ","SELL":"ПРОДАТЬ","CANCEL":"ОТМЕНА","LIST":"ВЫСТАВИТЬ","REQUEST":"ЗАПРОСИТЬ","YOU":"ВЫ",
@@ -555,7 +554,7 @@ function update(){
   $('fix').textContent=freezeLabel();$('fix').disabled=!canFreeze();
   $('stMinus').disabled=busy||run||stakePct<=5;$('stPlus').disabled=busy||run||stakePct>=100;$('stPct').textContent=stakePct+'%';$('stAmt').textContent=num(run?stake0:getStake());$('stake').style.opacity=(busy||run)?.5:1;
   if(typeof renderMarket==='function')renderMarket();
-  if(typeof renderShowcase==='function')try{renderShowcase()}catch(e){}
+  if(activeTab==='coll'&&typeof renderColl==='function')try{renderColl()}catch(e){}
   if(typeof scheduleSave==='function')scheduleSave();
 }
 setInterval(()=>{$('fix').textContent=freezeLabel();$('fix').disabled=!canFreeze()},1000);
@@ -710,13 +709,13 @@ $('go').onclick=start;$('cash').onclick=cashOut;$('fix').onclick=doFreeze;
 
 /* ================= TABS ================= */
 let activeTab='radar';
-const VIEW={radar:'vRadar',market:'vMarket',top:'vTop',codes:'vCodes',profile:'vProfile'};
+const VIEW={radar:'vRadar',market:'vMarket',top:'vTop',coll:'vColl',codes:'vCodes',profile:'vProfile'};
 function setTab(n){
   if(superOn&&n!=='radar')return;
   activeTab=n;Object.entries(VIEW).forEach(([k,id])=>$(id).classList.toggle('on',k===n));
   document.querySelectorAll('.tabb').forEach(b=>b.classList.toggle('on',b.dataset.t===n));
   $('pop').classList.remove('on');
-  if(n==='top')renderTop();if(n==='profile')renderProfile();if(n==='codes'){pzOpen=-1;renderCodes()}
+  if(n==='top')renderTop();if(n==='coll')renderColl();if(n==='profile')renderProfile();if(n==='codes'){pzOpen=-1;renderCodes()}
 }
 function lockTabs(on){document.querySelectorAll('.tabb').forEach(b=>b.disabled=on)}
 document.querySelectorAll('.tabb').forEach(b=>b.onclick=()=>setTab(b.dataset.t));
@@ -1063,7 +1062,7 @@ async function makeSupaDB(){
   return{db:{doc:docRef,collection:p=>colRef(p),signOut:async()=>{try{await sb.auth.signOut()}catch(e){}}},uid};
 }
 let mk={db:null,uid:null,live:false,ro:false,ready:false,owner:false};
-let asks=[],bids=[],supply={},players=[],profile=null,sortMode='pa',topSort='vd',topTier=0;
+let asks=[],bids=[],supply={},players=[],profile=null,sortMode='pa';
 const mailDone=new Set();
 const nameOf=id=>{if(id===mk.uid)return 'YOU';const p=players.find(x=>x.id===id);return p&&p.name?String(p.name):'P-'+String(id).slice(-4).toUpperCase()};
 let mmT=null;
@@ -1245,24 +1244,33 @@ const collHTML=o=>{
   const rows=ITEMS.filter(it=>(o&&o[it.id])>0).map(it=>`<div class="coll"><div class="th">${it.thumb}</div><b>${esc(it.name)}</b><span>×${o[it.id]} · ${num(o[it.id]*it.price)}</span></div>`);
   return rows.length?rows.join(''):'<div class="empty">NOTHING COLLECTED YET</div>';
 };
-const TIERS=[50,200,500];
+let myCollSig='';
+function renderColl(){
+  const el=$('collBody');if(!el)return;
+  const ru=LANG==='ru';
+  const o=ownedAll(),own=ITEMS.filter(it=>(o[it.id]||0)>0).sort((a,b)=>b.price-a.price);
+  const sig=LANG+'|'+themeId+'|'+own.map(i=>i.id+o[i.id]).join();
+  if(sig===myCollSig&&el.firstChild)return;
+  myCollSig=sig;
+  const head=`<div class="tt" style="margin-bottom:10px">${ru?'СТОИМОСТЬ КОЛЛЕКЦИИ':'COLLECTION VALUE'} <b style="color:var(--lime)">${num(collValue(o))}</b></div>`;
+  el.innerHTML=own.length
+    ?head+`<div class="room">${own.map(it=>`<div class="rm-c"><div class="rm-a"><canvas data-item="${it.id}"></canvas></div><div class="n">${esc(it.name.toUpperCase())}</div><div class="v">×${o[it.id]} · ${num(o[it.id]*it.price)}</div></div>`).join('')}</div>`
+    :head+`<div class="empty">${ru?'ПОКА НИЧЕГО НЕ СОБРАНО':'NOTHING COLLECTED YET'}</div><button class="go" id="myShop" style="width:100%;margin-top:10px">${ru?'В РЫНОК':'TO THE MARKET'}</button>`;
+  el.querySelectorAll('canvas').forEach(c=>V3.add(c,c.dataset.item,{bg:null,drag:true,speed:.012}));
+}
+$('collBody').addEventListener('click',e=>{if(e.target.closest('#myShop'))setTab('market')});
 function renderTop(){
   if(!$('topBody'))return;
   const val=p=>Number.isFinite(p.value)?p.value:collValue(p.inv);
   const cnt=(p,k)=>Math.max(0,Number(p.inv&&p.inv[k])||0);
-  const list=players.filter(p=>p.name).slice();
-  if(topSort==='vd')list.sort((a,b)=>val(b)-val(a));else if(topSort==='va')list.sort((a,b)=>val(a)-val(b));
-  else list.sort((a,b)=>cnt(b,topSort)-cnt(a,topSort)||val(b)-val(a));
-  const lim=TIERS[topTier],shown=list.slice(0,lim);
+  const list=players.filter(p=>p.name).slice().sort((a,b)=>val(b)-val(a));
+  const shown=list.slice(0,50);
   let h=shown.map((p,i)=>`<div class="lr${p.id===mk.uid?' me':''}" data-uid="${esc(p.id)}"><span class="rk">#${i+1}</span>${avatar(p.icon)}<span class="nmz">${esc(p.name)}</span><span class="it">${ITEMS.map(it=>'×'+cnt(p,it.id)).join(' ')}</span><span class="vl">${num(val(p))}</span></div>`).join('');
   if(!shown.length)h='<div class="empty">NO PLAYERS YET</div>';
-  if(list.length>lim&&topTier<TIERS.length-1)h+=`<button class="plus" id="topPlus" aria-label="Show more">+</button>`;
   $('topBody').innerHTML=h;
   $('topInfo').textContent='TOP '+shown.length+' OF '+list.length;
 }
-$('topSort').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;topSort=b.dataset.k;topTier=0;document.querySelectorAll('#topSort button').forEach(x=>x.classList.toggle('on',x===b));renderTop()});
 $('topBody').addEventListener('click',e=>{
-  if(e.target.closest('#topPlus')){topTier=Math.min(topTier+1,TIERS.length-1);renderTop();return}
   const r=e.target.closest('.lr');if(r)showPlayer(r.dataset.uid);
 });
 function showPlayer(id){
@@ -1321,51 +1329,6 @@ $('pfThemes').addEventListener('click',e=>{
 try{const sv=localStorage.getItem('reactor_theme');if(sv)applyTheme(sv)}catch(e){}
 
 
-
-/* ----- showcase on the main screen + showroom ----- */
-let showOrder=[],scSig='',scPrev=null;
-try{showOrder=JSON.parse(localStorage.getItem('reactor_show')||'[]')}catch(e){}
-function showItems(){
-  const own=ITEMS.filter(it=>(inv[it.id]||0)>0);
-  return own.sort((a,b)=>{const ia=showOrder.indexOf(a.id),ib=showOrder.indexOf(b.id);return(ia<0?99:ia)-(ib<0?99:ib)||b.price-a.price});
-}
-function renderShowcase(){
-  const el=$('showcase');if(!el)return;
-  const ru=LANG==='ru',list=showItems();
-  const sig=list.map(i=>i.id+inv[i.id]).join()+'|'+LANG+'|'+themeId;
-  if(sig===scSig)return;
-  let newId=null;
-  if(scPrev){for(const it of list){if((inv[it.id]||0)>(scPrev[it.id]||0))newId=it.id}}
-  scPrev={...inv};scSig=sig;
-  const val=collValue(inv);
-  const slots=list.slice(0,4).map(it=>`<div class="sc-i${it.id===newId?' new':''}"><canvas data-item="${it.id}"></canvas>${inv[it.id]>1?`<b>×${inv[it.id]}</b>`:''}</div>`);
-  while(slots.length<(list.length?Math.min(4,list.length):3))slots.push('<div class="sc-i lock">?</div>');
-  el.innerHTML=slots.join('')+(list.length
-    ?`<div class="sc-t">${ru?'КОЛЛЕКЦИЯ':'COLLECTION'}<b>${num(val)}</b></div>`
-    :`<div class="sc-t">${ru?'ПУСТО. КУПИТЕ ПЕРВЫЙ ПРЕДМЕТ В РЫНКЕ':'EMPTY. BUY YOUR FIRST ITEM IN THE MARKET'}</div>`);
-  el.querySelectorAll('canvas').forEach(c=>V3.add(c,c.dataset.item,{bg:null,speed:.02,when:()=>activeTab==='radar'}));
-  if(newId)try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}
-}
-function openShowroom(){
-  const ru=LANG==='ru';
-  const draw=()=>{
-    const list=showItems(),val=collValue(inv);
-    const body=list.length
-      ?`<div class="room">${list.map((it,i)=>`<div class="rm-c${i===0?' pin':''}"><div class="rm-a"><canvas data-item="${it.id}"></canvas></div><div class="n">${esc(it.name.toUpperCase())}</div><div class="v">×${inv[it.id]} · ${num(inv[it.id]*it.price)}</div>${i===0?`<div class="v" style="color:var(--lime)">${ru?'НА ГЛАВНОМ':'ON MAIN SCREEN'}</div>`:`<button data-pin="${it.id}">${ru?'НА ГЛАВНЫЙ':'PIN TO MAIN'}</button>`}</div>`).join('')}</div>`
-      :`<div class="empty">${ru?'ЗДЕСЬ БУДУТ ВАШИ ПРЕДМЕТЫ':'YOUR ITEMS WILL STAND HERE'}</div><button class="go" id="rmShop">${ru?'В РЫНОК':'TO THE MARKET'}</button>`;
-    o.querySelector('.ovp').innerHTML=`<h2>${ru?'КОЛЛЕКЦИЯ':'COLLECTION'}</h2><div class="tt">${ru?'СТОИМОСТЬ КОЛЛЕКЦИИ':'COLLECTION VALUE'} <b>${num(val)}</b></div>${body}<button class="ok" id="rmX" style="padding:12px">${ru?'ЗАКРЫТЬ':'CLOSE'}</button>`;
-    if(ru)trNode(o);
-    o.querySelectorAll('canvas').forEach(c=>V3.add(c,c.dataset.item,{bg:null,drag:true,speed:.012}));
-  };
-  const o=overlay('');draw();
-  o.addEventListener('click',e=>{
-    if(e.target===o||e.target.id==='rmX')return o.remove();
-    if(e.target.id==='rmShop'){o.remove();setTab('market');return}
-    const b=e.target.closest('button[data-pin]');
-    if(b){showOrder=[b.dataset.pin,...showOrder.filter(x=>x!==b.dataset.pin)];try{localStorage.setItem('reactor_show',JSON.stringify(showOrder))}catch(_){}scSig='';renderShowcase();draw()}
-  });
-}
-$('showcase').onclick=()=>{if(superOn||document.querySelector('.ovl,.coach'))return;openShowroom()};
 
 /* ----- delete account ----- */
 async function deleteAccount(){
@@ -1467,10 +1430,11 @@ function tutorial(){return new Promise(resolve=>{
    ['.pts','Your energy. It is the game currency.','Твоя энергия. Это валюта игры.'],
    ['#stakeRow','Stake. Press + to raise the percent of your energy you risk.','Ставка. Жми плюс, чтобы поднять процент энергии, которым рискуешь.'],
    ['.dial','Lime: the pot grows. Orange: overheat, you lose a part. Overheat chance: 15%, then 30%, then 45%.','Лайм: банк растёт. Оранжевый: перегрев, часть теряешь. Шанс перегрева: 15%, потом 30%, потом 45%.'],
-   ['#go','Drag the needle to pick where it starts, then press START.','Перетащи стрелку, куда хочешь, и нажми СТАРТ. Оттуда она и закрутится.'],
+   ['.dial','Drag the needle wherever you like and press START. It spins from there.','Перетащи стрелку, куда хочешь, и нажми СТАРТ. Оттуда она и закрутится.','drag'],
    ['#cash','Press CASH OUT in time. The pot is yours.','Успей нажать ВЫВЕСТИ. Банк твой.'],
    ['#fix','Overheated? FREEZE restarts the reactor.','Был перегрев? ЗАМОРОЗКА перезагрузит реактор.'],
    ['.tabb[data-t=market]','Buy items here and trade with players.','Тут покупай предметы и торгуй с игроками.'],
+   ['.tabb[data-t=coll]','Your collection: everything you bought is here.','Тут твоя коллекция: всё, что ты купил.'],
    ['.tabb[data-t=codes]','Solve a riddle, get the super game.','Разгадай ребус и получи супер игру.'],
    ['#delAcc','Trash button: deletes your account and all progress for good.','Кнопка с корзиной: навсегда удаляет аккаунт и весь прогресс.'],
    ['#help','The ? button: read this guide again any time.','Кнопка со знаком вопроса: прочитать эту инструкцию ещё раз.']
@@ -1481,8 +1445,27 @@ function tutorial(){return new Promise(resolve=>{
   document.body.appendChild(ov);
   const hl=ov.querySelector('.chl'),bx=ov.querySelector('.chb'),tx=ov.querySelector('.cht'),dots=ov.querySelector('.tdots'),bk=ov.querySelector('#chBack'),nx=ov.querySelector('#chNext');
   bk.textContent=ru?'НАЗАД':'BACK';
-  let i=0;
-  const done=()=>{try{localStorage.setItem('reactor_tut','1')}catch(e){}window.__gest=true;removeEventListener('resize',place);ov.remove();try{update()}catch(e){}resolve()};
+  let i=0,demoRaf=0,hand=null;
+  const stopDemo=()=>{cancelAnimationFrame(demoRaf);demoRaf=0;if(hand){hand.remove();hand=null}try{resetNeedle()}catch(e){}};
+  function startDemo(){
+    const d=document.querySelector('.dial'),nd=$('needle');if(!d||!nd)return;
+    hand=document.createElement('div');hand.className='chh';
+    hand.innerHTML='<i></i><svg width="34" height="34" viewBox="0 0 24 24" fill="#050705" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5a2 2 0 114 0v6m0 0V9a2 2 0 114 0v2m0 0a2 2 0 114 0v4a6 6 0 01-6 6h-2a6 6 0 01-5-3l-3-5a2 2 0 013-2l2 2"/></svg>';
+    ov.appendChild(hand);
+    const T=4200,t0=performance.now();
+    const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+    const tick=now=>{
+      const r=d.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,R=r.width/2*.84;
+      const t=((now-t0)%T)/T;                       // 0..1
+      let a;if(t<.12)a=0;else if(t<.5)a=ease((t-.12)/.38)*130;else if(t<.62)a=130;else if(t<.95)a=130*(1-ease((t-.62)/.33));else a=0;
+      nd.style.transition='none';nd.style.transform=`rotate(${a}deg)`;
+      const rad=a*Math.PI/180;hand.style.left=(cx+Math.sin(rad)*R-6)+'px';hand.style.top=(cy-Math.cos(rad)*R-4)+'px';
+      hand.classList.toggle('down',t>=.12&&t<.62);
+      demoRaf=requestAnimationFrame(tick);
+    };
+    demoRaf=requestAnimationFrame(tick);
+  }
+  const done=()=>{stopDemo();try{localStorage.setItem('reactor_tut','1')}catch(e){}window.__gest=true;removeEventListener('resize',place);ov.remove();try{update()}catch(e){}resolve()};
   function place(){
     const el=document.querySelector(S[i][0]);if(!el)return;
     const r=el.getBoundingClientRect(),pd=6;
@@ -1492,6 +1475,7 @@ function tutorial(){return new Promise(resolve=>{
     bx.style.top=top+'px';bx.style.left=Math.max(10,Math.min(innerWidth-w-10,r.left+r.width/2-w/2))+'px';
   }
   function draw(){
+    stopDemo();
     const el=document.querySelector(S[i][0]);if(el&&el.scrollIntoView)el.scrollIntoView({block:'nearest'});
     if(S[i][0]==='#cash'){$('cash').style.visibility='visible'}else{try{update()}catch(e){}}
     tx.textContent=ru?S[i][2]:S[i][1];
@@ -1499,6 +1483,7 @@ function tutorial(){return new Promise(resolve=>{
     bk.disabled=i===0;
     nx.textContent=i===S.length-1?(ru?'ПОЕХАЛИ':"LET'S GO"):(ru?'ДАЛЕЕ':'NEXT');
     requestAnimationFrame(place);
+    if(S[i][3]==='drag')startDemo();
   }
   bk.onclick=()=>{if(i>0){i--;draw()}};
   nx.onclick=()=>{if(i<S.length-1){i++;draw()}else done()};
@@ -1534,7 +1519,7 @@ async function splash(){
   await sleep(800);
   audio.riserCut();$('splash').remove();
 }
-function fitNow(){const app=$('app');app.style.zoom=1;const pad=14,z=Math.min(1,(innerWidth-pad*2)/app.offsetWidth,(innerHeight-pad*2)/app.offsetHeight);app.style.zoom=z}
+function fitNow(){const app=$('app');app.style.zoom=1;const pad=14,z=Math.min(1,(innerWidth-pad*2)/app.offsetWidth,(innerHeight-pad*2)/app.offsetHeight);app.style.zoom=z;document.documentElement.style.setProperty('--z',z)}
 function pickLang(){return new Promise(res=>{
   const o=overlay('<h2>LANGUAGE · ЯЗЫК</h2><button class="go" id="lRu">РУССКИЙ</button><button class="go" id="lEn">ENGLISH</button>');
   o.style.zIndex=1100;
@@ -1555,7 +1540,7 @@ async function boot(){
   publishProfile();
   setTimeout(()=>maybeTutorial(existing),500);
 }
-addEventListener('resize',fitNow);
+addEventListener('resize',()=>{const a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName))return;fitNow()});   // the on-screen keyboard shrinks the window: do not re-scale the interface because of it
 drawRing();update();
 boot();
 </script></body></html>
