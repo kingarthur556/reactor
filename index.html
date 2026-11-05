@@ -196,23 +196,12 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
 .thm button{min-width:92px;border:1px solid var(--lime);background:transparent;color:var(--lime);border-radius:8px;padding:8px 10px;font:inherit;font-size:11px;font-weight:800;letter-spacing:.1em;cursor:pointer}
 .thm.on button{background:var(--lime);color:var(--on)}
 
-body.super .showcase{display:none}
-.showcase{display:flex;align-items:center;gap:8px;border:1px solid var(--dim);background:var(--field);border-radius:10px;padding:6px 8px;margin-bottom:10px;min-height:58px;cursor:pointer;perspective:400px;overflow:hidden}
-.sc-i{position:relative;width:42px;height:46px;flex:none;border:1px solid var(--dim);border-radius:8px;background:#030403;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 10px color-mix(in srgb,var(--lime) 25%,transparent)}
-.sc-i canvas,.rm-a canvas{width:100%;height:100%;display:block}
-.sc-i.lock{opacity:.35;box-shadow:none;border-style:dashed;color:var(--muted);font-size:16px}
-.sc-i.new{animation:scnew 1.4s ease-out 2;border-color:var(--lime)}
-.sc-i b{position:absolute;right:2px;bottom:1px;font-size:10px;color:var(--lime);text-shadow:0 0 4px #000}
-.sc-t{flex:1;min-width:0;font-size:10px;letter-spacing:.12em;color:var(--muted);text-align:right;line-height:1.4}
-.sc-t b{display:block;color:var(--lime);font-size:13px}
-@keyframes scspin{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
-@keyframes scnew{0%{box-shadow:0 0 0 0 var(--lime)}60%{box-shadow:0 0 0 12px transparent}100%{box-shadow:0 0 10px transparent}}
 .room{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .rm-c{border:1px solid var(--dim);background:var(--panel);border-radius:12px;padding:10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;position:relative}
 .rm-c.pin{border-color:var(--lime)}
 .rm-a{width:100%;height:130px;background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--lime) 18%,transparent),transparent 65%),#030403;border-radius:8px;display:grid;place-items:center;perspective:500px;overflow:hidden;position:relative}
 .rm-a::after{content:"";position:absolute;left:12%;right:12%;bottom:8px;height:6px;border-radius:50%;background:var(--lime);opacity:.25;filter:blur(3px)}
-.rm-a canvas{touch-action:none;cursor:grab}
+.rm-a canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
 @keyframes rmbob{50%{translate:0 -4px}}
 .rm-c .n{font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--lime)}
 .rm-c .v{font-size:10px;color:var(--muted)}
@@ -236,7 +225,6 @@ body.super .showcase{display:none}
     <div class="center" id="center"></div>
   </section>
   <section class="panel">
-    <div class="showcase" id="showcase"></div>
     <div class="potbox"><span class="pl">POT</span><span class="pv" id="pot">0</span></div>
     <div class="hint" id="hint"></div>
     <div class="odds">
@@ -259,7 +247,7 @@ body.super .showcase{display:none}
   <div class="mmsg" id="mmsg"></div>
 </div></div>
 <div class="view" id="vTop"><div class="mk">
-  <div class="mkhead"><div class="seg" id="topSort"><button class="on" data-k="vd">VALUE ▼</button><button data-k="va">VALUE ▲</button></div><span class="live" id="topInfo"></span></div>
+  <div class="mkhead"><div class="seg" id="topSort"><button class="on" data-k="all">ALL COLLECTIONS</button><button data-k="my">MY COLLECTION</button></div><span class="live" id="topInfo"></span></div>
   <div class="mkbody" id="topBody"></div>
 </div></div>
 <div class="view" id="vCodes"><div class="mk">
@@ -295,7 +283,7 @@ const RU_EXACT={
 "EVERYTHING LOST":"ВСЁ ПОТЕРЯНО","START":"СТАРТ","CASH OUT":"ВЫВЕСТИ","FREEZE":"ЗАМОРОЗКА","FREEZE —":"ЗАМОРОЗКА —","RESET":"СБРОС",
 "OVERHEATS CLEARED":"ПЕРЕГРЕВЫ СНЯТЫ","SUPER":"СУПЕР","SUPER GAME":"СУПЕР-ИГРА","FROZEN: 3 OVERHEATS AVAILABLE AGAIN":"ЗАМОРОЖЕНО: СНОВА ДОСТУПНЫ 3 ПЕРЕГРЕВА",
 "SUPER OVER":"СУПЕР-ИГРА ЗАКОНЧЕНА","INVALID CODE":"НЕВЕРНЫЙ КОД","WAIT FOR THE ROUND":"ДОЖДИТЕСЬ КОНЦА РАУНДА","THIS CODE IS ALREADY USED":"ЭТОТ КОД УЖЕ ИСПОЛЬЗОВАН",
-"STAKE":"СТАВКА","THEME":"ТЕМА","MAKE REQUEST":"СДЕЛАТЬ ЗАПРОС","REQUEST A PRICE":"ЗАПРОСИТЬ ЦЕНУ","NO REAL SELLERS YET, ONLY THE SYSTEM. WAIT UNTIL SOMEONE LISTS AN OFFER":"ПОКА НЕТ НАСТОЯЩИХ ПРОДАВЦОВ, ЕСТЬ ТОЛЬКО СИСТЕМА. ОЖИДАЙТЕ, ПОКА КТО-ТО ВЫСТАВИТ ПРЕДЛОЖЕНИЕ","REQUEST":"ЗАПРОСИТЬ","Delete account":"Удалить аккаунт","DELETE ACCOUNT":"УДАЛИТЬ АККАУНТ","SYSTEM":"СИСТЕМА","CHOOSE AN ITEM":"ВЫБЕРИТЕ ПРЕДМЕТ","ON SALE":"В ПРОДАЖЕ","FROM":"ОТ","NOTHING ON SALE":"НИЧЕГО НЕ ПРОДАЁТСЯ","NO REQUESTS":"НЕТ ЗАПРОСОВ","REQUESTS":"ЗАПРОСЫ","UP TO":"ДО","NOTHING HERE YET":"ЗДЕСЬ ПОКА ПУСТО","YOUR OFFERS":"ВАШИ ПРЕДЛОЖЕНИЯ","THE SYSTEM STILL SELLS THIS ITEM":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ","THE SYSTEM STILL SELLS THIS ITEM. BUY IT IN OFFERS, REQUESTS ARE NOT POSSIBLE":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ. КУПИТЕ ЕГО В ПРЕДЛОЖЕНИЯХ, ЗАПРОСЫ НЕВОЗМОЖНЫ","LEFT":"ОСТАЛОСЬ","YOUR OFFERS · ITEMS YOU PUT UP FOR SALE":"ВАШИ ПРЕДЛОЖЕНИЯ · ПРЕДМЕТЫ, ВЫСТАВЛЕННЫЕ НА ПРОДАЖУ","YOUR BUY REQUESTS":"ВАШИ ЗАПРОСЫ НА ПОКУПКУ","NO OFFERS YET":"ПОКА НЕТ ПРЕДЛОЖЕНИЙ","CODES":"КОДЫ","USED TODAY":"ИСПОЛЬЗОВАН СЕГОДНЯ","TAP TO OPEN THE RIDDLE":"НАЖМИТЕ, ЧТОБЫ ОТКРЫТЬ РЕБУС","CODES · SOLVE THE RIDDLE, ENTER THE CODE":"КОДЫ · РАЗГАДАЙТЕ РЕБУС, ВВЕДИТЕ КОД","CODE":"КОД","PRICE":"ЦЕНА","NICKNAME":"НИКНЕЙМ","MARKET":"РЫНОК","RANKS":"РЕЙТИНГ","PROFILE":"ПРОФИЛЬ",
+"STAKE":"СТАВКА","ALL COLLECTIONS":"ВСЕ КОЛЛЕКЦИИ","MY COLLECTION":"МОЯ КОЛЛЕКЦИЯ","THEME":"ТЕМА","MAKE REQUEST":"СДЕЛАТЬ ЗАПРОС","REQUEST A PRICE":"ЗАПРОСИТЬ ЦЕНУ","NO REAL SELLERS YET, ONLY THE SYSTEM. WAIT UNTIL SOMEONE LISTS AN OFFER":"ПОКА НЕТ НАСТОЯЩИХ ПРОДАВЦОВ, ЕСТЬ ТОЛЬКО СИСТЕМА. ОЖИДАЙТЕ, ПОКА КТО-ТО ВЫСТАВИТ ПРЕДЛОЖЕНИЕ","REQUEST":"ЗАПРОСИТЬ","Delete account":"Удалить аккаунт","DELETE ACCOUNT":"УДАЛИТЬ АККАУНТ","SYSTEM":"СИСТЕМА","CHOOSE AN ITEM":"ВЫБЕРИТЕ ПРЕДМЕТ","ON SALE":"В ПРОДАЖЕ","FROM":"ОТ","NOTHING ON SALE":"НИЧЕГО НЕ ПРОДАЁТСЯ","NO REQUESTS":"НЕТ ЗАПРОСОВ","REQUESTS":"ЗАПРОСЫ","UP TO":"ДО","NOTHING HERE YET":"ЗДЕСЬ ПОКА ПУСТО","YOUR OFFERS":"ВАШИ ПРЕДЛОЖЕНИЯ","THE SYSTEM STILL SELLS THIS ITEM":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ","THE SYSTEM STILL SELLS THIS ITEM. BUY IT IN OFFERS, REQUESTS ARE NOT POSSIBLE":"СИСТЕМА ЕЩЁ ПРОДАЁТ ЭТОТ ПРЕДМЕТ. КУПИТЕ ЕГО В ПРЕДЛОЖЕНИЯХ, ЗАПРОСЫ НЕВОЗМОЖНЫ","LEFT":"ОСТАЛОСЬ","YOUR OFFERS · ITEMS YOU PUT UP FOR SALE":"ВАШИ ПРЕДЛОЖЕНИЯ · ПРЕДМЕТЫ, ВЫСТАВЛЕННЫЕ НА ПРОДАЖУ","YOUR BUY REQUESTS":"ВАШИ ЗАПРОСЫ НА ПОКУПКУ","NO OFFERS YET":"ПОКА НЕТ ПРЕДЛОЖЕНИЙ","CODES":"КОДЫ","USED TODAY":"ИСПОЛЬЗОВАН СЕГОДНЯ","TAP TO OPEN THE RIDDLE":"НАЖМИТЕ, ЧТОБЫ ОТКРЫТЬ РЕБУС","CODES · SOLVE THE RIDDLE, ENTER THE CODE":"КОДЫ · РАЗГАДАЙТЕ РЕБУС, ВВЕДИТЕ КОД","CODE":"КОД","PRICE":"ЦЕНА","NICKNAME":"НИКНЕЙМ","MARKET":"РЫНОК","RANKS":"РЕЙТИНГ","PROFILE":"ПРОФИЛЬ",
 "SHOP":"МАГАЗИН","ALL":"ВСЕ","OFFERS":"ПРЕДЛОЖЕНИЯ","REQUESTS":"ЗАПРОСЫ","MY":"МОЁ","CONNECTING…":"ПОДКЛЮЧЕНИЕ…",
 "LIVE · SHARED MARKET":"ОНЛАЙН · ОБЩИЙ РЫНОК","LIVE · READ-ONLY":"ОНЛАЙН · ТОЛЬКО ЧТЕНИЕ",
 "SOLD OUT":"РАСПРОДАНО","BUY":"КУПИТЬ","SELL":"ПРОДАТЬ","CANCEL":"ОТМЕНА","LIST":"ВЫСТАВИТЬ","REQUEST":"ЗАПРОСИТЬ","YOU":"ВЫ",
@@ -559,7 +547,7 @@ function update(){
   $('fix').textContent=freezeLabel();$('fix').disabled=!canFreeze();
   $('stMinus').disabled=busy||run||stakePct<=5;$('stPlus').disabled=busy||run||stakePct>=100;$('stPct').textContent=stakePct+'%';$('stAmt').textContent=num(run?stake0:getStake());$('stake').style.opacity=(busy||run)?.5:1;
   if(typeof renderMarket==='function')renderMarket();
-  if(typeof renderShowcase==='function')try{renderShowcase()}catch(e){}
+  if(topSort==='my'&&activeTab==='top'&&typeof renderTop==='function')try{renderTop()}catch(e){}
   if(typeof scheduleSave==='function')scheduleSave();
 }
 setInterval(()=>{$('fix').textContent=freezeLabel();$('fix').disabled=!canFreeze()},1000);
@@ -1067,7 +1055,7 @@ async function makeSupaDB(){
   return{db:{doc:docRef,collection:p=>colRef(p),signOut:async()=>{try{await sb.auth.signOut()}catch(e){}}},uid};
 }
 let mk={db:null,uid:null,live:false,ro:false,ready:false,owner:false};
-let asks=[],bids=[],supply={},players=[],profile=null,sortMode='pa',topSort='vd',topTier=0;
+let asks=[],bids=[],supply={},players=[],profile=null,sortMode='pa',topSort='all';
 const mailDone=new Set();
 const nameOf=id=>{if(id===mk.uid)return 'YOU';const p=players.find(x=>x.id===id);return p&&p.name?String(p.name):'P-'+String(id).slice(-4).toUpperCase()};
 let mmT=null;
@@ -1249,24 +1237,36 @@ const collHTML=o=>{
   const rows=ITEMS.filter(it=>(o&&o[it.id])>0).map(it=>`<div class="coll"><div class="th">${it.thumb}</div><b>${esc(it.name)}</b><span>×${o[it.id]} · ${num(o[it.id]*it.price)}</span></div>`);
   return rows.length?rows.join(''):'<div class="empty">NOTHING COLLECTED YET</div>';
 };
-const TIERS=[50,200,500];
+let myCollSig='';
 function renderTop(){
   if(!$('topBody'))return;
+  const ru=LANG==='ru';
   const val=p=>Number.isFinite(p.value)?p.value:collValue(p.inv);
   const cnt=(p,k)=>Math.max(0,Number(p.inv&&p.inv[k])||0);
-  const list=players.filter(p=>p.name).slice();
-  if(topSort==='vd')list.sort((a,b)=>val(b)-val(a));else if(topSort==='va')list.sort((a,b)=>val(a)-val(b));
-  else list.sort((a,b)=>cnt(b,topSort)-cnt(a,topSort)||val(b)-val(a));
-  const lim=TIERS[topTier],shown=list.slice(0,lim);
+  if(topSort==='my'){
+    const o=ownedAll(),own=ITEMS.filter(it=>(o[it.id]||0)>0).sort((a,b)=>b.price-a.price);
+    const sig='my|'+LANG+'|'+themeId+'|'+own.map(i=>i.id+o[i.id]).join();
+    $('topInfo').textContent='';
+    if(sig===myCollSig&&$('topBody').firstChild)return;
+    myCollSig=sig;
+    const head=`<div class="tt" style="margin-bottom:10px">${ru?'СТОИМОСТЬ КОЛЛЕКЦИИ':'COLLECTION VALUE'} <b style="color:var(--lime)">${num(collValue(o))}</b></div>`;
+    $('topBody').innerHTML=own.length
+      ?head+`<div class="room">${own.map(it=>`<div class="rm-c"><div class="rm-a"><canvas data-item="${it.id}"></canvas></div><div class="n">${esc(it.name.toUpperCase())}</div><div class="v">×${o[it.id]} · ${num(o[it.id]*it.price)}</div></div>`).join('')}</div>`
+      :head+`<div class="empty">${ru?'ПОКА НИЧЕГО НЕ СОБРАНО':'NOTHING COLLECTED YET'}</div><button class="go" id="myShop" style="width:100%;margin-top:10px">${ru?'В РЫНОК':'TO THE MARKET'}</button>`;
+    $('topBody').querySelectorAll('canvas').forEach(c=>V3.add(c,c.dataset.item,{bg:null,drag:true,speed:.012}));
+    return;
+  }
+  myCollSig='';
+  const list=players.filter(p=>p.name).slice().sort((a,b)=>val(b)-val(a));
+  const shown=list.slice(0,50);
   let h=shown.map((p,i)=>`<div class="lr${p.id===mk.uid?' me':''}" data-uid="${esc(p.id)}"><span class="rk">#${i+1}</span>${avatar(p.icon)}<span class="nmz">${esc(p.name)}</span><span class="it">${ITEMS.map(it=>'×'+cnt(p,it.id)).join(' ')}</span><span class="vl">${num(val(p))}</span></div>`).join('');
   if(!shown.length)h='<div class="empty">NO PLAYERS YET</div>';
-  if(list.length>lim&&topTier<TIERS.length-1)h+=`<button class="plus" id="topPlus" aria-label="Show more">+</button>`;
   $('topBody').innerHTML=h;
   $('topInfo').textContent='TOP '+shown.length+' OF '+list.length;
 }
-$('topSort').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;topSort=b.dataset.k;topTier=0;document.querySelectorAll('#topSort button').forEach(x=>x.classList.toggle('on',x===b));renderTop()});
+$('topSort').addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;topSort=b.dataset.k;myCollSig='';document.querySelectorAll('#topSort button').forEach(x=>x.classList.toggle('on',x===b));renderTop()});
 $('topBody').addEventListener('click',e=>{
-  if(e.target.closest('#topPlus')){topTier=Math.min(topTier+1,TIERS.length-1);renderTop();return}
+  if(e.target.closest('#myShop')){setTab('market');return}
   const r=e.target.closest('.lr');if(r)showPlayer(r.dataset.uid);
 });
 function showPlayer(id){
@@ -1325,51 +1325,6 @@ $('pfThemes').addEventListener('click',e=>{
 try{const sv=localStorage.getItem('reactor_theme');if(sv)applyTheme(sv)}catch(e){}
 
 
-
-/* ----- showcase on the main screen + showroom ----- */
-let showOrder=[],scSig='',scPrev=null;
-try{showOrder=JSON.parse(localStorage.getItem('reactor_show')||'[]')}catch(e){}
-function showItems(){
-  const own=ITEMS.filter(it=>(inv[it.id]||0)>0);
-  return own.sort((a,b)=>{const ia=showOrder.indexOf(a.id),ib=showOrder.indexOf(b.id);return(ia<0?99:ia)-(ib<0?99:ib)||b.price-a.price});
-}
-function renderShowcase(){
-  const el=$('showcase');if(!el)return;
-  const ru=LANG==='ru',list=showItems();
-  const sig=list.map(i=>i.id+inv[i.id]).join()+'|'+LANG+'|'+themeId;
-  if(sig===scSig)return;
-  let newId=null;
-  if(scPrev){for(const it of list){if((inv[it.id]||0)>(scPrev[it.id]||0))newId=it.id}}
-  scPrev={...inv};scSig=sig;
-  const val=collValue(inv);
-  const slots=list.slice(0,4).map(it=>`<div class="sc-i${it.id===newId?' new':''}"><canvas data-item="${it.id}"></canvas>${inv[it.id]>1?`<b>×${inv[it.id]}</b>`:''}</div>`);
-  while(slots.length<(list.length?Math.min(4,list.length):3))slots.push('<div class="sc-i lock">?</div>');
-  el.innerHTML=slots.join('')+(list.length
-    ?`<div class="sc-t">${ru?'КОЛЛЕКЦИЯ':'COLLECTION'}<b>${num(val)}</b></div>`
-    :`<div class="sc-t">${ru?'ПУСТО. КУПИТЕ ПЕРВЫЙ ПРЕДМЕТ В РЫНКЕ':'EMPTY. BUY YOUR FIRST ITEM IN THE MARKET'}</div>`);
-  el.querySelectorAll('canvas').forEach(c=>V3.add(c,c.dataset.item,{bg:null,speed:.02,when:()=>activeTab==='radar'}));
-  if(newId)try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}
-}
-function openShowroom(){
-  const ru=LANG==='ru';
-  const draw=()=>{
-    const list=showItems(),val=collValue(inv);
-    const body=list.length
-      ?`<div class="room">${list.map((it,i)=>`<div class="rm-c${i===0?' pin':''}"><div class="rm-a"><canvas data-item="${it.id}"></canvas></div><div class="n">${esc(it.name.toUpperCase())}</div><div class="v">×${inv[it.id]} · ${num(inv[it.id]*it.price)}</div>${i===0?`<div class="v" style="color:var(--lime)">${ru?'НА ГЛАВНОМ':'ON MAIN SCREEN'}</div>`:`<button data-pin="${it.id}">${ru?'НА ГЛАВНЫЙ':'PIN TO MAIN'}</button>`}</div>`).join('')}</div>`
-      :`<div class="empty">${ru?'ЗДЕСЬ БУДУТ ВАШИ ПРЕДМЕТЫ':'YOUR ITEMS WILL STAND HERE'}</div><button class="go" id="rmShop">${ru?'В РЫНОК':'TO THE MARKET'}</button>`;
-    o.querySelector('.ovp').innerHTML=`<h2>${ru?'КОЛЛЕКЦИЯ':'COLLECTION'}</h2><div class="tt">${ru?'СТОИМОСТЬ КОЛЛЕКЦИИ':'COLLECTION VALUE'} <b>${num(val)}</b></div>${body}<button class="ok" id="rmX" style="padding:12px">${ru?'ЗАКРЫТЬ':'CLOSE'}</button>`;
-    if(ru)trNode(o);
-    o.querySelectorAll('canvas').forEach(c=>V3.add(c,c.dataset.item,{bg:null,drag:true,speed:.012}));
-  };
-  const o=overlay('');draw();
-  o.addEventListener('click',e=>{
-    if(e.target===o||e.target.id==='rmX')return o.remove();
-    if(e.target.id==='rmShop'){o.remove();setTab('market');return}
-    const b=e.target.closest('button[data-pin]');
-    if(b){showOrder=[b.dataset.pin,...showOrder.filter(x=>x!==b.dataset.pin)];try{localStorage.setItem('reactor_show',JSON.stringify(showOrder))}catch(_){}scSig='';renderShowcase();draw()}
-  });
-}
-$('showcase').onclick=()=>{if(superOn||document.querySelector('.ovl,.coach'))return;openShowroom()};
 
 /* ----- delete account ----- */
 async function deleteAccount(){
