@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>REACTOR</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <meta property="og:title" content="REACTOR"><meta property="og:type" content="website">
@@ -51,7 +51,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:12px;ma
 .odd{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--dim);border-radius:10px;padding:7px 14px;font-size:13px;letter-spacing:.08em}
 .odd i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:10px}
 .odd b{font-size:17px}
-input{min-width:0;width:100%;background:var(--field);border:1px solid var(--dim);border-radius:8px;padding:10px;color:var(--txt);font:inherit;font-size:15px}
+input{min-width:0;width:100%;background:var(--field);border:1px solid var(--dim);border-radius:8px;padding:10px;color:var(--txt);font:inherit;font-size:calc(16px / var(--z,1))}
 input:focus{outline:1px solid var(--lime)}
 #code{text-transform:uppercase;letter-spacing:.15em}
 .go:disabled,.fix:disabled,.cash:disabled,.stb:disabled{opacity:.4;cursor:not-allowed}
@@ -1514,7 +1514,7 @@ async function splash(){
   await sleep(800);
   audio.riserCut();$('splash').remove();
 }
-function fitNow(){const app=$('app');app.style.zoom=1;const pad=14,z=Math.min(1,(innerWidth-pad*2)/app.offsetWidth,(innerHeight-pad*2)/app.offsetHeight);app.style.zoom=z}
+function fitNow(){const app=$('app');app.style.zoom=1;const pad=14,z=Math.min(1,(innerWidth-pad*2)/app.offsetWidth,(innerHeight-pad*2)/app.offsetHeight);app.style.zoom=z;document.documentElement.style.setProperty('--z',z)}
 function pickLang(){return new Promise(res=>{
   const o=overlay('<h2>LANGUAGE · ЯЗЫК</h2><button class="go" id="lRu">РУССКИЙ</button><button class="go" id="lEn">ENGLISH</button>');
   o.style.zIndex=1100;
@@ -1535,7 +1535,7 @@ async function boot(){
   publishProfile();
   setTimeout(()=>maybeTutorial(existing),500);
 }
-addEventListener('resize',fitNow);
+addEventListener('resize',()=>{const a=document.activeElement;if(a&&/^(INPUT|TEXTAREA)$/.test(a.tagName))return;fitNow()});   // the on-screen keyboard shrinks the window: do not re-scale the interface because of it
 drawRing();update();
 boot();
 </script></body></html>
