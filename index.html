@@ -552,13 +552,13 @@ function update(){
   $('go').disabled=busy||!walletReady||(!run&&!stakeOk());
   $('cash').style.visibility=run?'visible':'hidden';$('cash').textContent='CASH OUT '+num(pot);$('cash').disabled=busy||!run;
   $('fix').textContent=freezeLabel();$('fix').disabled=!canFreeze();
-  $('stMinus').disabled=busy||run||stakePct<=5;$('stPlus').disabled=busy||run||stakePct>=100;$('stPct').textContent=stakePct+'%';$('stAmt').textContent=num(run?stake0:getStake());$('stake').style.opacity=(busy||run)?.5:1;
+  $('stMinus').disabled=busy||run||stakePct<=10;$('stPlus').disabled=busy||run||stakePct>=100;$('stPct').textContent=stakePct+'%';$('stAmt').textContent=num(run?stake0:getStake());$('stake').style.opacity=(busy||run)?.5:1;
   if(typeof renderMarket==='function')renderMarket();
   if(activeTab==='coll'&&typeof renderColl==='function')try{renderColl()}catch(e){}
   if(typeof scheduleSave==='function')scheduleSave();
 }
 setInterval(()=>{$('fix').textContent=freezeLabel();$('fix').disabled=!canFreeze()},1000);
-$('stMinus').onclick=()=>{stakePct=Math.max(5,stakePct-5);update()};$('stPlus').onclick=()=>{stakePct=Math.min(100,stakePct+5);update()};
+$('stMinus').onclick=()=>{stakePct=Math.max(10,stakePct-10);update()};$('stPlus').onclick=()=>{stakePct=Math.min(100,stakePct+10);update()};
 function soundIcon(){
   $('snd').innerHTML=audio.isMuted()
    ?'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>'
