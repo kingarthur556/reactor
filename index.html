@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>REACTOR</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <meta property="og:title" content="REACTOR"><meta property="og:type" content="website">
@@ -1329,6 +1329,22 @@ $('pfThemes').addEventListener('click',e=>{
 try{const sv=localStorage.getItem('reactor_theme');if(sv)applyTheme(sv)}catch(e){}
 
 
+
+
+/* ----- auto-update: on every start check the server for a newer build and reload once ----- */
+const BUILD='20261105214617';
+(async function(){
+  if(!/^https?:/.test(location.protocol))return;
+  try{
+    const r=await fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'});if(!r.ok)return;
+    const t=await r.text(),m=/const BUILD='(\d+)'/.exec(t);
+    if(m&&m[1]!==BUILD&&Number(m[1])>Number(BUILD)){
+      if(sessionStorage.getItem('reactor_upd')===m[1])return;      // already tried this build in this session, avoid a loop
+      sessionStorage.setItem('reactor_upd',m[1]);
+      location.replace(location.pathname+'?v='+m[1]+location.hash);
+    }
+  }catch(e){}
+})();
 
 /* ----- delete account ----- */
 async function deleteAccount(){
