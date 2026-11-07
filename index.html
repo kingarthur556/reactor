@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><script src="https://telegram.org/js/telegram-web-app.js"></script><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>REACTOR</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <meta property="og:title" content="REACTOR"><meta property="og:type" content="website">
@@ -10,9 +10,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23050705'/%3E%3Cg fill='%23a8f21f'%3E%3Cpath id='a' d='M16.5 4.21A9 9 0 0 0 7.5 4.21L10.4 9.23A3.2 3.2 0 0 1 13.6 9.23Z'/%3E%3Cpath transform='rotate(120 12 12)' d='M16.5 4.21A9 9 0 0 0 7.5 4.21L10.4 9.23A3.2 3.2 0 0 1 13.6 9.23Z'/%3E%3Cpath transform='rotate(240 12 12)' d='M16.5 4.21A9 9 0 0 0 7.5 4.21L10.4 9.23A3.2 3.2 0 0 1 13.6 9.23Z'/%3E%3Ccircle cx='12' cy='12' r='1.7'/%3E%3C/g%3E%3C/svg%3E">
 <style>
 :root{--lime:#a8f21f;--dim:#2c3d0c;--bg:#050705;--app:#080b06;--panel:#0b0f08;--field:#0e1409;--txt:#e9f5d0;--muted:#7d8a6a;--amber:#f2c230;--red:#ff3b30;--on:#050705}
-body.super{--lime:#b980ff;--dim:#3b2260;--bg:#06040a;--app:#0a0710;--panel:#0d0914;--field:#130d1e;--txt:#f0e6ff;--muted:#8d7aa8}
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:100%;overscroll-behavior:none}
+.mkbody,.view{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 body{margin:0;overflow:hidden;display:flex;justify-content:center;align-items:center;padding:14px;background:var(--bg);color:var(--txt);font-family:ui-monospace,"SF Mono",Consolas,"Roboto Mono",monospace;transition:background .4s}
 body.boot .app{visibility:hidden}
 .app{position:relative;width:min(100%,960px);background:var(--app);border:0;border-radius:0;padding:clamp(14px,2.4vw,24px);transition:border-color .2s,box-shadow .2s,background .4s}
@@ -256,11 +256,6 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
   <div class="mkhead"><div class="live" id="collHead">COLLECTION</div></div>
   <div class="mkbody" id="collBody"></div>
 </div></div>
-<div class="view" id="vCodes"><div class="mk">
-  <div class="mkhead"><div class="live" id="cHead">CODES · SOLVE THE RIDDLE, ENTER THE CODE</div></div>
-  <div class="mkbody" id="codesBody"></div>
-  <div class="mmsg" id="cmsg"></div>
-</div></div>
 <div class="view" id="vProfile"><div class="mk"><div class="mkbody" id="profBody">
   <div class="pfhead"><div class="av big" id="pfAv"></div><div class="col"><input id="pfName" maxlength="16" placeholder="NICKNAME"><button class="sb" id="pfSave">SAVE</button></div></div>
   <div class="mh">ICON</div><div class="icons" id="pfIcons"></div>
@@ -275,7 +270,6 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
 <button class="tabb" data-t="market"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3"/><path d="M5 12v8h14v-8"/><path d="M10 20v-4h4v4"/></svg>MARKET</button>
 <button class="tabb" data-t="coll"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>COLLECTION</button>
 <button class="tabb" data-t="top"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20v-7h4v7M10 20V6h4v14M15 20v-10h4v10"/></svg>RANKS</button>
-<button class="tabb" data-t="codes"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M15 12v2"/></svg>CODES</button>
 <button class="tabb" data-t="profile"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>PROFILE</button>
 </nav>
 <div class="pop" id="pop"></div>
@@ -478,31 +472,23 @@ const audio=(()=>{
 
 /* ================= GAME ================= */
 let LIME='#a8f21f',AMBER='#f2c230',RINGBG='#10170a';const PURP='#b980ff',RED='#ff3b30';
-const START_PTS=1000,BASE=.15,STEP=.15,PO_MAX=.45,SUPER_PO=.1;      // normal: overheat chance 15% -> 30% -> 45%; super: always 10%
+const START_PTS=1000,BASE=.15,STEP=.15,PO_MAX=.45;      // normal: overheat chance 15% -> 30% -> 45%; super: always 10%
 const RULES={
   normal:{gain:.2,first:.15,second:.40,acc:3},  // overheat #1 -15% of stake, #2 -40% of pot, #3 = accident
-  super:{gain:.5,first:.50,second:0,acc:2}      // overheat #1 -50% of stake, #2 = accident
 };
-const FREEZE_MS=60*60*1000,CODE_COOLDOWN=24*60*60*1000,SUPER_SECS=[15,60];
+const FREEZE_MS=60*60*1000;
 const $=id=>document.getElementById(id);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const fix=x=>Math.round(x*100)/100;
 const num=x=>fix(x).toLocaleString('en-US',{maximumFractionDigits:2});
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let pts=START_PTS,pot=0,run=false,ovN=0,stake0=0,po=BASE,busy=false,walletReady=false;
-let rot=0,pending=null,msgT=null,heat=false,superOn=false,superEnd=0,superT=null,nSnap=null;
+let rot=0,pending=null,msgT=null,heat=false,nSnap=null;
 let freeze=[0,0],codeAt=0,codeUsed=[];                // two freeze charges; each one comes back 60 min after use
-const accent=()=>superOn?PURP:LIME;
-const effPo=()=>superOn?SUPER_PO:po;
-const R=()=>superOn?RULES.super:RULES.normal;
+const accent=()=>LIME;
+const effPo=()=>po;
+const R=()=>RULES.normal;
 
-/* ----- daily codes: 3 per day (5 s / 15 s / 60 s of super game) ----- */
-const CODE_WORDS=['ION','VOLT','CORE','ROD','FUSE','BEAM','FLUX','GRID','PULSE','SPARK','AMBER','NEON','ATOM','QUARK','CESIUM','BORON','XENON','RADON','ALPHA','BETA','GAMMA','DELTA','OMEGA','TURBO','STEAM','VALVE','COOLANT','SHIELD','ARC','DYNAMO','CIRCUIT','SIGNAL','STATIC','GLITCH','BYTE','PIXEL','VECTOR','ORBIT','LASER','MATRIX'];
-const FIXED_CODES={'2026-11-04':['START','REACTOR','END']};
-function hashStr(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
-function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-function codesFor(day){return ['REACTOR','END']}
-const dayStr=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 
 /* ----- ring ----- */
 function pt(a,r){const t=a*Math.PI/180;return[150+r*Math.sin(t),150-r*Math.cos(t)]}
@@ -535,19 +521,18 @@ let stakePct=10;
 function getStake(){return Math.max(1,Math.floor(pts*stakePct/100))}
 function stakeOk(){const s=getStake();return Number.isInteger(s)&&s>=1&&s<=pts}
 function say(t,err){const m=$('msg');m.textContent=t;m.className='msg'+(err?' err':'');clearTimeout(msgT);msgT=setTimeout(()=>m.textContent='',3500)}
-function syncMusic(){audio.mode(superOn?'super':heat?'heat':'calm')}
+function syncMusic(){audio.mode(heat?'heat':'calm')}
 const freezeCharges=()=>freeze.filter(t=>t<=Date.now()).length;
 function freezeLabel(){
-  if(superOn)return 'FREEZE —';
   const c=freezeCharges();if(c>0)return 'FREEZE ×'+c;
   const w=Math.min(...freeze)-Date.now(),m=Math.max(0,Math.ceil(w/1000));
   return 'FREEZE '+String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
 }
-function canFreeze(){return run&&!busy&&!superOn&&freezeCharges()>0&&(ovN>0||po>BASE)}
+function canFreeze(){return run&&!busy&&freezeCharges()>0&&(ovN>0||po>BASE)}
 function update(){
   const p=effPo(),r=R();
   $('pts').textContent=num(pts);$('pot').textContent=num(pot);
-  $('hint').textContent=!run?'':ovN===0?'NEXT OVERHEAT −'+Math.round(r.first*100)+'% OF '+(superOn?'POT':'STAKE'):(ovN===1&&!superOn)?'NEXT OVERHEAT −'+Math.round(r.second*100)+'% OF POT':'';
+  $('hint').textContent=!run?'':ovN===0?'NEXT OVERHEAT −'+Math.round(r.first*100)+'% OF STAKE':ovN===1?'NEXT OVERHEAT −'+Math.round(r.second*100)+'% OF POT':'';
   $('oN').textContent=Math.round((1-p)*100)+'%';$('oO').textContent=Math.round(p*100)+'%';
   $('go').disabled=busy||!walletReady||(!run&&!stakeOk());
   $('cash').style.visibility=run?'visible':'hidden';$('cash').textContent='CASH OUT '+num(pot);$('cash').disabled=busy||!run;
@@ -593,7 +578,7 @@ function finish(out){
   const r=R();
   if(out==='normal'){
     const g=fix(pot*r.gain);pot=fix(pot+g);
-    if(!superOn)po=fix(Math.min(PO_MAX,po+STEP));
+    po=fix(Math.min(PO_MAX,po+STEP));
     heat=false;
     showCenter('NORMAL','+'+num(g),accent());audio.normal();syncMusic();update();
     pending=setTimeout(settle,1700);
@@ -613,9 +598,9 @@ function finish(out){
     return;
   }
   const pct=ovN===1?r.first:r.second;
-  const lost=fix(Math.min(pot,ovN===1?(superOn?pot:stake0)*r.first:pot*r.second));pot=fix(pot-lost);
-  if(!superOn)po=BASE;
-  showCenter('OVERHEAT','−'+num(lost),AMBER,'−'+Math.round(pct*100)+'% '+(ovN===1&&!superOn?'OF STAKE':'OF POT'));
+  const lost=fix(Math.min(pot,ovN===1?stake0*r.first:pot*r.second));pot=fix(pot-lost);
+  po=BASE;
+  showCenter('OVERHEAT','−'+num(lost),AMBER,'−'+Math.round(pct*100)+'% '+(ovN===1?'OF STAKE':'OF POT'));
   audio.warn();syncMusic();update();
   pending=setTimeout(settle,1700);
 }
@@ -623,7 +608,6 @@ function settle(){
   pending=null;resetNeedle();busy=false;
   if(pot<0.01)resetRun();
   drawRing();syncMusic();update();
-  if(superOn&&Date.now()>=superEnd)superOff();
 }
 function cashOut(){
   if(!run||busy)return;
@@ -638,84 +622,16 @@ function doFreeze(){
   drawRing();syncMusic();update();
 }
 
-/* ----- super mode: a separate, fresh game; the normal game is paused and restored afterwards ----- */
-function tickSuper(){
-  const left=superEnd-Date.now();
-  if(left<=0){if(!busy)superOff();else $('sup').textContent='SUPER GAME 0s';return}
-  $('sup').style.display='block';$('sup').textContent='SUPER GAME '+Math.ceil(left/1000)+'s';
-}
-function superStart(secs){
-  nSnap={pot,run,ovN,stake0,po,heat};
-  pot=0;run=false;ovN=0;stake0=0;heat=false;
-  superOn=true;superEnd=Date.now()+secs*1000;
-  document.body.classList.add('super');setTab('radar');lockTabs(true);
-  showCenter('SUPER GAME','START',accent());drawRing();
-  audio.superOn();syncMusic();say('SUPER GAME · '+secs+'s');
-  clearInterval(superT);superT=setInterval(tickSuper,250);tickSuper();update();
-}
-function superOff(){
-  clearInterval(superT);
-  if(run&&pot>0){pts=fix(pts+pot);say('SUPER POT PAID +'+num(pot))}else say('SUPER OVER');
-  superOn=false;lockTabs(false);document.body.classList.remove('super');$('sup').style.display='none';
-  ({pot,run,ovN,stake0,po,heat}=nSnap);nSnap=null;
-  showCenter('','',accent());drawRing();
-  audio.superOff();syncMusic();update();
-}
-/* ================= CODES TAB (riddles) ================= */
-const CODE_ALIASES=[['REACTOR','РЕАКТОР'],['END','КОНЕЦ']];
-const SVGW=(inner)=>'<svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg>';
-const PUZ_ART=[
-SVGW('<rect width="400" height="200" fill="#050705"/><g stroke="#c8ff00" stroke-opacity=".12">'+Array.from({length:10},(_,i)=>'<line x1="'+(i*45)+'" y1="0" x2="'+(i*45)+'" y2="200"/>').join('')+'</g><rect x="140" y="170" width="120" height="16" fill="#12200a" stroke="#c8ff00"/><path d="M155 170 V70 Q155 40 200 40 Q245 40 245 70 V170Z" fill="#0b1a02" stroke="#c8ff00" stroke-width="3"/><circle cx="200" cy="95" r="26" fill="#c8ff00" fill-opacity=".85"/><circle cx="200" cy="95" r="40" fill="none" stroke="#c8ff00" stroke-opacity=".5" stroke-dasharray="4 6"/><circle cx="200" cy="95" r="54" fill="none" stroke="#c8ff00" stroke-opacity=".25" stroke-dasharray="2 8"/><path d="M165 140 H235M165 152 H235" stroke="#c8ff00" stroke-opacity=".6"/><path d="M60 150 C80 90 110 170 140 110 S150 60 150 60 M340 150 C320 90 290 170 260 110 S250 60 250 60" fill="none" stroke="#ff4d4d" stroke-width="5" stroke-linecap="round" stroke-opacity=".85"/><circle cx="150" cy="60" r="6" fill="#ff4d4d"/><circle cx="250" cy="60" r="6" fill="#ff4d4d"/><text x="200" y="22" fill="#c8ff00" font-size="11" text-anchor="middle" letter-spacing="3" font-family="monospace">THE SUN IN A JAR · NINE SERPENTS</text>'),
-SVGW('<rect width="400" height="200" fill="#050705"/><text x="52" y="120" fill="#c8ff00" font-size="90" font-family="serif" text-anchor="middle">A</text><text x="348" y="120" fill="#c8ff00" font-size="90" font-family="serif" text-anchor="middle">Ω</text><path d="M110 100 C150 40 180 40 200 100 S250 160 290 100" fill="none" stroke="#c8ff00" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 9"/><rect x="150" y="140" width="100" height="34" rx="4" fill="#0b1a02" stroke="#c8ff00"/><text x="162" y="162" fill="#c8ff00" font-size="14" font-family="monospace">&gt; _ _ _</text><rect x="232" y="150" width="9" height="16" fill="#c8ff00"><animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/></rect><text x="200" y="26" fill="#c8ff00" font-size="11" text-anchor="middle" letter-spacing="3" font-family="monospace">THE FIRST AND THE LAST · THE FINAL LINE</text>')
-];
-const PUZ={
-en:[
- {t:'THE SUN IN A JAR',s:'Year 2041. A lab hides a technology that does not exist yet: a sealed heart of fire that holds a small artificial sun and feeds a whole city for a thousand years. Like Noah\'s ark it was built to survive any flood. One night nine hackers, the Nine Serpents, slither into its cooling code and try to push the core into overheat, while engineers race to keep it stable. This game carries its name. What is it called?'},
- {t:'THE LAST LINE',s:'It is written: "I am the Alpha and the Omega, the beginning and the ..." The same thing happens in the code. After the final command, the last line of every script, every book and every story, a lone cursor blinks and the terminal prints one short word. That is how the world of this puzzle closes. Which word completes the sentence?'}
-],
-ru:[
- {t:'СОЛНЦЕ В БАНКЕ',s:'2041 год. В лаборатории спрятана технология, которой ещё не существует: запечатанное сердце огня, в котором живёт маленькое искусственное солнце и кормит целый город тысячу лет. Как ковчег Ноя, оно построено, чтобы пережить любой потоп. Однажды ночью девять хакеров, Девять Змей, проползают в код охлаждения и пытаются довести ядро до перегрева, пока инженеры борются за его стабильность. Игра носит его имя. Как оно называется?'},
- {t:'ПОСЛЕДНЯЯ СТРОКА',s:'Написано: «Я есмь Альфа и Омега, начало и ...» То же происходит в коде. После последней команды, в последней строке любого скрипта, любой книги и любой истории, мигает одинокий курсор, и терминал печатает одно короткое слово. Так закрывается мир этой загадки. Какое слово заканчивает фразу?'}
-]};
-let pzOpen=-1;
-const SECLBL=n=>n+' '+(LANG==='ru'?'СЕК':'SEC');
-function pzDone(i){return !mk.owner&&codeUsed.includes(dayStr()+'|'+codesFor(dayStr())[i])}
-function renderCodes(){
-  const el=$('codesBody'),L=LANG==='ru'?'ru':'en',cm=$('cmsg');cm.textContent='';
-  if(pzOpen<0){
-    el.innerHTML=PUZ[L].map((p,i)=>`<button class="pz${pzDone(i)?' done':''}" data-i="${i}"><span class="pn">${SUPER_SECS[i]}s</span><span class="pt">${p.t}<small>${tr(pzDone(i)?'USED TODAY':'TAP TO OPEN THE RIDDLE')}</small></span></button>`).join('');
-    return;
-  }
-  const p=PUZ[L][pzOpen],n=codesFor(dayStr())[pzOpen].length;
-  el.innerHTML=`<button class="ok" id="pzBack" style="padding:8px 14px;margin-bottom:10px">${tr('BACK')}</button><div class="pzart">${PUZ_ART[pzOpen]}</div><div class="pzh">${p.t} · ${SECLBL(SUPER_SECS[pzOpen])}</div><div class="pzs">${p.s}</div><div class="pzb">${Array(n).fill('_').join(' ')}</div><div class="pzr"><input id="pzIn" type="text" placeholder="CODE" autocomplete="off" spellcheck="false"><button class="ok" id="pzOk">OK</button></div>`;
-  $('pzBack').onclick=()=>{pzOpen=-1;renderCodes()};
-  $('pzIn').addEventListener('input',e=>{e.target.value=e.target.value.toUpperCase()});
-  $('pzIn').addEventListener('keydown',e=>{if(e.key==='Enter')useCode(pzOpen)});
-  $('pzOk').onclick=()=>useCode(pzOpen);
-}
-$('codesBody').addEventListener('click',e=>{const b=e.target.closest('.pz');if(!b)return;pzOpen=Number(b.dataset.i);renderCodes()});
-function cm(t,err){const m=$('cmsg');m.textContent=tr(t);m.className='mmsg'+(err?' err':'')}
-function useCode(i){
-  audio.init();
-  const v=$('pzIn').value.trim().toUpperCase();$('pzIn').value='';
-  if(v==='')return;
-  if(v!==CODE_ALIASES[i][0]&&v!==CODE_ALIASES[i][1])return cm('INVALID CODE',true);
-  if(superOn||busy)return cm('WAIT FOR THE ROUND',true);
-  const key=dayStr()+'|'+codesFor(dayStr())[i];
-  if(!mk.owner&&codeUsed.includes(key))return cm('THIS CODE IS ALREADY USED',true);
-  codeUsed=codeUsed.filter(k=>k.startsWith(dayStr())).concat(key);superStart(SUPER_SECS[i]);
-}
 $('go').onclick=start;$('cash').onclick=cashOut;$('fix').onclick=doFreeze;
 
 /* ================= TABS ================= */
 let activeTab='radar';
-const VIEW={radar:'vRadar',market:'vMarket',top:'vTop',coll:'vColl',codes:'vCodes',profile:'vProfile'};
+const VIEW={radar:'vRadar',market:'vMarket',top:'vTop',coll:'vColl',profile:'vProfile'};
 function setTab(n){
-  if(superOn&&n!=='radar')return;
   activeTab=n;Object.entries(VIEW).forEach(([k,id])=>$(id).classList.toggle('on',k===n));
   document.querySelectorAll('.tabb').forEach(b=>b.classList.toggle('on',b.dataset.t===n));
   $('pop').classList.remove('on');
-  if(n==='top')renderTop();if(n==='coll')renderColl();if(n==='profile')renderProfile();if(n==='codes'){pzOpen=-1;renderCodes()}
+  if(n==='top')renderTop();if(n==='coll')renderColl();if(n==='profile')renderProfile();
 }
 function lockTabs(on){document.querySelectorAll('.tabb').forEach(b=>b.disabled=on)}
 document.querySelectorAll('.tabb').forEach(b=>b.onclick=()=>setTab(b.dataset.t));
@@ -1346,6 +1262,16 @@ const BUILD='20261105214617';
   }catch(e){}
 })();
 
+/* ----- Telegram Mini App: full height, and do not close the app when the player swipes down ----- */
+(function(){
+  try{
+    const tg=window.Telegram&&window.Telegram.WebApp;if(!tg)return;
+    tg.ready();tg.expand();
+    if(tg.disableVerticalSwipes)tg.disableVerticalSwipes();
+    if(tg.enableClosingConfirmation)tg.enableClosingConfirmation();
+    if(tg.setHeaderColor)tg.setHeaderColor('#050705');if(tg.setBackgroundColor)tg.setBackgroundColor('#050705');
+  }catch(e){}
+})();
 /* ----- delete account ----- */
 async function deleteAccount(){
   const ru=LANG==='ru';
@@ -1451,11 +1377,10 @@ function tutorial(){return new Promise(resolve=>{
    ['#fix','Overheated? FREEZE restarts the reactor.','Был перегрев? ЗАМОРОЗКА перезагрузит реактор.'],
    ['.tabb[data-t=market]','Buy items here and trade with players.','Тут покупай предметы и торгуй с игроками.'],
    ['.tabb[data-t=coll]','Your collection: everything you bought is here.','Тут твоя коллекция: всё, что ты купил.'],
-   ['.tabb[data-t=codes]','Solve a riddle, get the super game.','Разгадай ребус и получи супер игру.'],
    ['#delAcc','Trash button: deletes your account and all progress for good.','Кнопка с корзиной: навсегда удаляет аккаунт и весь прогресс.'],
    ['#help','The ? button: read this guide again any time.','Кнопка со знаком вопроса: прочитать эту инструкцию ещё раз.']
   ];
-  if(!superOn)setTab('radar');
+  setTab('radar');
   const ov=document.createElement('div');ov.className='coach';
   ov.innerHTML='<div class="chl"></div><div class="chb"><div class="cht"></div><div class="tdots"></div><div class="tbtns"><button class="ok" id="chBack"></button><button class="go" id="chNext"></button></div></div><button class="chx" aria-label="Close">✕</button>';
   document.body.appendChild(ov);
