@@ -76,7 +76,7 @@ input:focus{outline:1px solid var(--lime)}
 .card{border:0;border-radius:0;background:transparent;padding:6px 0 14px;display:flex;flex-direction:column;gap:10px}
 .art{height:230px;background:#030403;border:1px solid var(--dim);border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
 .art svg,.art canvas{width:100%;height:100%;display:block}
-.art canvas{cursor:grab;touch-action:none}
+.art canvas{pointer-events:none}
 .nm{font-size:17px;font-weight:900;letter-spacing:.12em;color:var(--lime)}
 .pr{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .pr b{font-size:22px;color:var(--txt)}
@@ -89,7 +89,7 @@ input:focus{outline:1px solid var(--lime)}
 .seg button,.sortbar button{border:1px solid var(--dim);background:var(--field);color:var(--muted);border-radius:8px;padding:7px 12px;font:inherit;font-size:11px;letter-spacing:.15em;cursor:pointer}
 .seg button.on,.sortbar button.on{background:var(--lime);color:var(--on);border-color:var(--lime);font-weight:800}
 .live{font-size:10px;letter-spacing:.15em;color:var(--muted)}
-.mkbody{flex:1 1 0;height:0;min-height:380px;overflow:auto;border:0;border-radius:0;background:transparent;padding:4px 0;position:relative}
+.mkbody{flex:1 1 0;height:0;min-height:380px;overflow-x:hidden;overflow-y:auto;border:0;border-radius:0;background:transparent;margin:0 -14px;padding:4px 14px;position:relative;touch-action:pan-y}
 .sub{display:none}.sub.on{display:block}
 .mkbody .art{height:150px}
 .ed{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.12em;color:var(--muted)}
@@ -203,7 +203,7 @@ select{min-width:0;background:var(--field);border:1px solid var(--dim);border-ra
 .rm-c.pin{border-color:var(--lime)}
 .rm-a{width:100%;height:130px;background:radial-gradient(ellipse at 50% 85%,color-mix(in srgb,var(--lime) 18%,transparent),transparent 65%),#030403;border-radius:8px;display:grid;place-items:center;perspective:500px;overflow:hidden;position:relative}
 .rm-a::after{content:"";position:absolute;left:12%;right:12%;bottom:8px;height:6px;border-radius:50%;background:var(--lime);opacity:.25;filter:blur(3px)}
-.rm-a canvas{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+.rm-a canvas{width:100%;height:100%;display:block;pointer-events:none}
 @keyframes rmbob{50%{translate:0 -4px}}
 .rm-c .n{font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--lime)}
 .rm-c .v{font-size:10px;color:var(--muted)}
@@ -912,7 +912,7 @@ const V3=(()=>{
   }
   return{add,models};
 })();
-ITEMS.forEach(it=>V3.add(it.cv,it.id,{drag:true,when:()=>activeTab==='market'}));
+ITEMS.forEach(it=>V3.add(it.cv,it.id,{when:()=>activeTab==='market'}));
 
 /* ================= SHARED BACKEND =================
    Published page: the artifact "db" capability (real players share one market, profiles and ranks).
@@ -1093,6 +1093,7 @@ function bestFor(it){
   return{shown:c[0]?c[0].price:null,buy:c[0]||null};
 }
 function renderMarket(){
+  if(UI.hold){UI.dirty.add('market');return}
   if(!$('left_eden'))return;
   const dis=!mk.ready||mk.ro;
   ITEMS.forEach(it=>{
@@ -1162,6 +1163,7 @@ const collHTML=o=>{
 };
 let myCollSig='';
 function renderColl(){
+  if(UI.hold){UI.dirty.add('coll');return}
   const el=$('collBody');if(!el)return;
   const ru=LANG==='ru';
   const o=ownedAll(),own=ITEMS.filter(it=>(o[it.id]||0)>0).sort((a,b)=>b.price-a.price);
@@ -1172,10 +1174,11 @@ function renderColl(){
   el.innerHTML=own.length
     ?head+`<div class="room">${own.map(it=>`<div class="rm-c"><div class="rm-a"><canvas data-item="${it.id}"></canvas></div><div class="n">${esc(it.name.toUpperCase())}</div><div class="v">×${o[it.id]} · ${num(o[it.id]*it.price)}</div></div>`).join('')}</div>`
     :head+`<div class="empty">${ru?'ПОКА НИЧЕГО НЕ СОБРАНО':'NOTHING COLLECTED YET'}</div><button class="go" id="myShop" style="width:100%;margin-top:10px">${ru?'В РЫНОК':'TO THE MARKET'}</button>`;
-  el.querySelectorAll('canvas').forEach(c=>V3.add(c,c.dataset.item,{bg:null,drag:true,speed:.012}));
+  el.querySelectorAll('canvas').forEach(c=>V3.add(c,c.dataset.item,{bg:null,speed:.012}));
 }
 $('collBody').addEventListener('click',e=>{if(e.target.closest('#myShop'))setTab('market')});
 function renderTop(){
+  if(UI.hold){UI.dirty.add('top');return}
   if(!$('topBody'))return;
   const val=p=>Number.isFinite(p.value)?p.value:collValue(p.inv);
   const cnt=(p,k)=>Math.max(0,Number(p.inv&&p.inv[k])||0);
@@ -1271,6 +1274,16 @@ const BUILD='20261105214617';
     if(tg.enableClosingConfirmation)tg.enableClosingConfirmation();
     if(tg.setHeaderColor)tg.setHeaderColor('#050705');if(tg.setBackgroundColor)tg.setBackgroundColor('#050705');
   }catch(e){}
+})();
+/* ----- do not re-draw the lists while a finger is on them: a re-draw between touch-down and touch-up swallows the tap and breaks scrolling ----- */
+const UI={hold:0,dirty:new Set(),t:0};
+(function(){
+  const rel=()=>{clearTimeout(UI.t);UI.t=setTimeout(()=>{UI.hold=0;const d=[...UI.dirty];UI.dirty.clear();
+    d.forEach(k=>{try{if(k==='market')renderMarket();else if(k==='coll')renderColl();else if(k==='top')renderTop()}catch(e){}})},350)};
+  const inList=e=>e.target&&e.target.closest&&e.target.closest('.mkbody');
+  document.addEventListener('pointerdown',e=>{if(inList(e)){UI.hold=1;clearTimeout(UI.t)}},true);
+  ['pointerup','pointercancel'].forEach(ev=>document.addEventListener(ev,()=>{if(UI.hold)rel()},true));
+  document.addEventListener('scroll',e=>{if(inList(e)){UI.hold=1;rel()}},true);
 })();
 /* ----- delete account ----- */
 async function deleteAccount(){
